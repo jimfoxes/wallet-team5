@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
     AuthWrapper,
@@ -15,16 +16,18 @@ import {
     LinkUp,
 } from './AuthForm.styled'
 
-export const AuthForm = ({ isSignUp = false }) => {
+import { signIn, signUp } from '../../services/auth'
+
+export const AuthForm = ({ isSignUp = false, onLogin }) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    // Флаг: была ли попытка отправить форму
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [error, setError] = useState('')
 
-    // Валидация
+    const navigate = useNavigate()
+
     const isValidEmail = email.trim() !== '' && /\S+@\S+\.\S+/.test(email)
     const isValidPassword = password.trim().length >= 6
     const isValidName =
@@ -32,30 +35,50 @@ export const AuthForm = ({ isSignUp = false }) => {
 
     const allValid = isValidEmail && isValidPassword && isValidName
 
-    // Показывать ошибки ТОЛЬКО после отправки
     const showEmailError = isSubmitted && !isValidEmail
     const showPasswordError = isSubmitted && !isValidPassword
     const showNameError = isSubmitted && isSignUp && !isValidName
 
-    // Устанавливаем текст ошибки
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setIsSubmitted(true)
 
-        // Устанавливаем ошибку напрямую
-        if (!isValidEmail) {
-            setError('Введите корректный email')
-        } else if (!isValidPassword) {
-            setError('Пароль должен быть не менее 6 символов')
-        } else if (isSignUp && !isValidName) {
-            setError('Имя должно быть не менее 2 символов')
-        } else {
-            setError('')
+        if (!allValid) {
+            if (!isValidEmail) {
+                setError('Введите корректный email')
+            } else if (!isValidPassword) {
+                setError('Пароль должен быть не менее 6 символов')
+            } else if (isSignUp && !isValidName) {
+                setError('Имя должно быть не менее 2 символов')
+            }
+            return
         }
 
-        if (!allValid) return
+        try {
+            setError('')
+            let response
 
-        console.log('Форма отправлена:', { name, email, password })
+            if (isSignUp) {
+                response = await signUp({
+                    name,
+                    login: email,
+                    password,
+                })
+            } else {
+                response = await signIn({
+                    login: email,
+                    password,
+                })
+            }
+
+            localStorage.setItem('authToken', response.user.token)
+            localStorage.setItem('userName', response.user.name)
+
+            if (onLogin) onLogin()
+            navigate('/analytics', { replace: true })
+        } catch (err) {
+            setError(err.message || 'Ошибка авторизации')
+        }
     }
 
     return (

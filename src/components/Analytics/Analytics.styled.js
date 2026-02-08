@@ -5,7 +5,6 @@ export const BodyContainer = styled.div`
     padding-right: 120px;
     box-sizing: border-box;
 `
-
 export const AnalyticsTitle = styled.h1`
     color: rgba(0, 0, 0, 1);
     font-family: Montserrat;

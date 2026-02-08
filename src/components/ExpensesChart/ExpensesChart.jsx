@@ -20,7 +20,6 @@ const mockExpenses = [
     { date: '2025-04-08', category: 'Другое', amount: 19106 },
 ]
 
-// Заглушка: период (в будущем — из календаря)
 const useSelectedPeriod = () => {
     return {
         from: '2025-04-01',
@@ -28,7 +27,6 @@ const useSelectedPeriod = () => {
     }
 }
 
-// Вспомогательная функция: сравнение дат
 const isDateInRange = (dateStr, from, to) => {
     const date = new Date(dateStr)
     const fromDay = new Date(from)
@@ -38,18 +36,16 @@ const isDateInRange = (dateStr, from, to) => {
 }
 
 export const ExpensesChart = () => {
-    const { from, to } = useSelectedPeriod() // ← заменится на пропс позже
+    const { from, to } = useSelectedPeriod() // ← заменится позже, когда появится календарь
     //     export const ExpensesChart = ({ period }) => {
     //     const { from, to } = period
     //     // убрать useSelectedPeriod()
     // }
 
-    // Фильтруем траты по диапазону
     const filteredExpenses = mockExpenses.filter((expense) =>
         isDateInRange(expense.date, from, to)
     )
 
-    // Суммируем по категориям
     const categoryTotals = filteredExpenses.reduce((acc, expense) => {
         acc[expense.category] = (acc[expense.category] || 0) + expense.amount
         return acc
@@ -63,7 +59,6 @@ export const ExpensesChart = () => {
     )
     const maxAmount = Math.max(...Object.values(categoryTotals), 1)
 
-    // Форматируем даты для отображения
     const formatDate = (dateStr) => {
         const date = new Date(dateStr)
         const options = { day: 'numeric', month: 'long', year: 'numeric' }
@@ -74,7 +69,6 @@ export const ExpensesChart = () => {
     const isSameDay = (dateA, dateB) => {
         return new Date(dateA).toDateString() === new Date(dateB).toDateString()
     }
-    // Форматируем числа в суммах
     const formatNumber = (num) => {
         return new Intl.NumberFormat('ru-RU').format(num)
     }
