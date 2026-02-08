@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const analyticsTitle = styled.h1`
+export const AnalyticsTitle = styled.h1`
     text-align: center;
     margin: 0;
     padding-top: 100px;
