@@ -1,4 +1,5 @@
 import * as S from './ExpensesChart.styled'
+import { useNavigate } from 'react-router-dom'
 
 const categoryColors = {
     Еда: 'rgba(217, 182, 255, 1);',
@@ -41,6 +42,7 @@ export const ExpensesChart = () => {
     //     const { from, to } = period
     //     // убрать useSelectedPeriod()
     // }
+    const navigate = useNavigate()
 
     const filteredExpenses = mockExpenses.filter((expense) =>
         isDateInRange(expense.date, from, to)
@@ -72,11 +74,13 @@ export const ExpensesChart = () => {
     const formatNumber = (num) => {
         return new Intl.NumberFormat('ru-RU').format(num)
     }
+    const handleCalendarClick = () => {
+        navigate('/calendar') // ← пока нет страницы — можно временно
+    }
 
     return (
         <S.ChartContainer>
             <S.TotalAmount>{formatNumber(total)} ₽</S.TotalAmount>
-
             <S.SelectedPeriodContainer>
                 {from && to ? (
                     isSameDay(from, to) ? (
@@ -120,6 +124,11 @@ export const ExpensesChart = () => {
                     )
                 })}
             </S.Chart>
+            <S.CalendarButtonContainer>
+                <S.CalendarButton onClick={handleCalendarClick}>
+                    Выбрать другой период
+                </S.CalendarButton>
+            </S.CalendarButtonContainer>
         </S.ChartContainer>
     )
 }

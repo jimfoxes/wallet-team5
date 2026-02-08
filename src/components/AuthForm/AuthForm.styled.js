@@ -8,6 +8,13 @@ export const AuthWrapper = styled.div`
     justify-content: center;
     padding: 20px;
     box-sizing: border-box;
+
+    @media (max-width: 768px) {
+        align-items: flex-start;
+        padding-top: 64px;
+        padding-left: 0;
+        padding-right: 0;
+    }
 `
 export const Modal = styled.div`
     width: 379px;
@@ -21,9 +28,26 @@ export const Modal = styled.div`
     border-radius: 30px;
     box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
     background: #fff;
+
+    @media (max-width: 768px) {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 64px);
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        background: #ffffff;
+        padding: 0;
+        overflow-y: auto;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 24px;
+        z-index: 999;
+    }
 `
 export const Title = styled.h2`
-    height: 29px;
     color: rgba(0, 0, 0, 1);
     font-family: Montserrat;
     font-style: Bold;
@@ -32,6 +56,10 @@ export const Title = styled.h2`
     line-height: 29px;
     letter-spacing: 0px;
     text-align: center;
+
+    @media (max-width: 768px) {
+        padding-top: 151px;
+    }
 `
 export const Form = styled.form`
     display: flex;
@@ -39,6 +67,10 @@ export const Form = styled.form`
     gap: 12px;
     width: 100%;
     position: relative;
+
+    @media (max-width: 768px) {
+        width: 100%;
+    }
 `
 export const InputWrapper = styled.div`
     position: relative;
@@ -58,28 +90,17 @@ export const Input = styled.input`
         outline: none;
     }
 
-    /* Ошибка */
-    ${({ $error }) =>
-        $error &&
-        `
-    background: #ffebeb;
-    border-color: #ff3333;
-    &::placeholder {
-        color: #ff3333;
-    }
-`}
-
     /* Успех */
-${({ $success, $error }) =>
+    ${({ $success, $error }) =>
         $success &&
         !$error &&
         `
-    background: #f0e6ff;
-    border-color: #565eef;
-    &::placeholder {
-        color: #565eef;
-    }
-`}
+            background: #f0e6ff;
+            border-color: #565eef;
+            &::placeholder {
+                color: #565eef;
+            }
+    `}
 
     /* Фокус при ошибке или успехе */
 &:focus {
@@ -88,7 +109,7 @@ ${({ $success, $error }) =>
             `border-color: #ff3333; box-shadow: 0 0 0 2px rgba(255, 51, 51, 0.2);`}
         ${({ $success, $error }) =>
             $success &&
-            $error &&
+            !$error &&
             `border-color: #565eef; box-shadow: 0 0 0 2px rgba(86, 94, 239, 0.2);`}
     }
 
@@ -101,6 +122,15 @@ ${({ $success, $error }) =>
         line-height: 15px;
         letter-spacing: 0px;
         text-align: left;
+    }
+
+    @media (max-width: 768px) {
+        width: calc(100% - 32px);
+        margin-left: 16px;
+        margin-right: 16px;
+        font-size: 14px;
+        padding: 12px;
+        height: 39px;
     }
 `
 export const Button = styled.button`
@@ -126,6 +156,15 @@ export const Button = styled.button`
     &:active {
         background: rgb(80, 0, 230);
     }
+
+    @media (max-width: 768px) {
+        width: calc(100% - 32px);
+        margin-left: 16px;
+        margin-right: 16px;
+        font-size: 14px;
+        height: 44px;
+        padding: 0 16px;
+    }
 `
 export const ErrorMessage = styled.p`
     position: absolute;
@@ -143,6 +182,11 @@ export const ErrorMessage = styled.p`
     visibility: ${(props) => (props.$visible ? 'visible' : 'hidden')};
     transition: all 0.2s ease;
     pointer-events: none;
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+        top: -26px;
+    }
 `
 export const LinkText = styled.p`
     color: rgba(153, 153, 153, 1);
@@ -153,6 +197,11 @@ export const LinkText = styled.p`
     line-height: 150%;
     letter-spacing: 0px;
     text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 14px;
+        line-height: 140%;
+    }
 `
 export const Link = styled.a`
     color: rgba(153, 153, 153, 1);

@@ -56,6 +56,9 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     font-family: Montserrat;
     background-color: #f4f5f6;
+    @media (max-width: 768px) {
+      background: rgba(255, 255, 255, 1);
+    }
   }
 
   .rdp-root {

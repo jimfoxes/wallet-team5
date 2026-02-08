@@ -5,6 +5,11 @@ export const Header = styled.header`
     background-color: #ffffff;
     display: flex;
     justify-content: space-between;
+    z-index: 1000;
+    @media (max-width: 768px) {
+        padding: 16px;
+        border-bottom: 1px solid #dee2e6;
+    }
 `
 
 export const HeaderBlock = styled.div`
@@ -19,8 +24,10 @@ export const HeaderBlock = styled.div`
     position: relative;
     top: 0;
     left: 0;
-    @media (max-width: 1200px) {
-        height: 54px;
+
+    @media (max-width: 768px) {
+        font-size: 18px;
+        justify-content: center;
     }
 `
 export const LogoutButton = styled.button`
@@ -37,5 +44,10 @@ export const LogoutButton = styled.button`
     &:hover {
         background-color: #dc3545;
         color: white;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 15px;
+        padding: 10px 16px;
     }
 `
