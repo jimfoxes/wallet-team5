@@ -2,64 +2,34 @@ import styled from 'styled-components'
 
 export const ChartContainer = styled.div`
     width: 100%;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 789px;
+    padding: 32px 32px 44px 32px;
+    border-radius: 30px;
+    box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+    background: var(--Skyeng b2b / White, rgba(255, 255, 255, 1));
 `
-
-export const Controls = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-`
-
-export const PeriodLabel = styled.span`
-    font-size: 14px;
-    color: #333;
-`
-
-export const ButtonGroup = styled.div`
-    display: flex;
-    gap: 5px;
-`
-
-export const ToggleButton = styled.button`
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    background: ${(props) => (props.$active ? '#565eef' : '#fff')};
-    color: ${(props) => (props.$active ? '#fff' : '#333')};
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.2s ease;
-
-    &:hover:not(:disabled) {
-        background: ${(props) => (props.$active ? '#4a52e0' : '#f5f5f5')};
-    }
-`
-
 export const TotalAmount = styled.p`
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
+    width: 268px;
+    color: rgba(0, 0, 0, 1);
+    font-family: Montserrat;
+    font-style: Bold;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 29px;
+    letter-spacing: 0px;
+    text-align: left;
 `
 
 export const Chart = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    height: 300px;
-    padding: 20px 0;
-    background: #f9f9f9;
+    height: 387px;
     border-radius: 8px;
     align-items: flex-end;
     overflow: visible;
+    gap: 32px;
+    padding-top: 18px;
 `
 
 export const BarWrapper = styled.div`
@@ -70,16 +40,17 @@ export const BarWrapper = styled.div`
     position: relative;
     justify-content: flex-end;
     height: 100%;
-    gap: 4px;
+    gap: 12px;
+    padding-top: 12px;
 `
 
 export const Bar = styled.div`
-    width: 50px;
+    width: 94px;
     height: ${(props) => props.$height}%;
     background: ${(props) => props.$color || '#ccc'};
-    border-radius: 6px 6px 0 0;
+    border-radius: 12px;
     transition: height 0.3s ease;
-    min-height: 2px;
+    min-height: 4px;
 
     &:hover {
         opacity: 0.9;
@@ -87,49 +58,107 @@ export const Bar = styled.div`
 `
 
 export const BarLabel = styled.p`
-    margin-top: 8px;
+    width: 94px;
+    height: 15px;
+    color: rgba(0, 0, 0, 1);
+    font-family: Montserrat;
+    font-style: Regular;
     font-size: 12px;
-    color: #555;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0px;
     text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60px;
-`
-
-export const BarValue = styled.p`
-    margin-top: 4px;
-    font-size: 11px;
-    color: #777;
-    font-weight: 500;
-`
-// Добавьте в конец файла
-export const CalendarPlaceholder = styled.div`
-    text-align: center;
-    padding: 12px;
-    background: #f0f4f8;
-    border-radius: 8px;
-    color: #555;
-    font-size: 14px;
-    margin-bottom: 16px;
-    border: 1px dashed #aaa;
 `
 
 export const SelectedPeriod = styled.p`
-    font-size: 14px;
-    color: #555;
+    height: 15px;
+    color: rgba(153, 153, 153, 1);
+    font-family: Montserrat;
+    font-style: Regular;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: center;
     text-align: center;
     margin-bottom: 12px;
 `
 
 export const BarValueAbove = styled.p`
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: #333;
-    font-weight: 500;
-    margin: 0 0 4px 0;
-    white-space: nowrap;
+    width: 94px;
+    height: 20px;
+    color: rgba(0, 0, 0, 1);
+    font-family: Montserrat;
+    font-style: SemiBold;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0px;
+    text-align: center;
+`
+
+export const SelectedPeriodContainer = styled.div`
+    width: 268px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    padding-top: 12px;
+`
+
+export const PrefixText = styled.span`
+    width: 70px;
+    height: 15px;
+    color: rgba(153, 153, 153, 1);
+    font-family: Montserrat;
+    font-style: Regular;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: center;
+`
+
+export const DateContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+`
+
+export const DateText = styled.span`
+    height: 15px;
+    color: rgba(153, 153, 153, 1);
+    font-family: Montserrat;
+    font-style: SemiBold;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: center;
+`
+
+export const SeparatorText = styled.span`
+    height: 15px;
+    color: rgba(153, 153, 153, 1);
+    font-family: Montserrat;
+    font-style: Regular;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: center;
+`
+
+export const NoDataText = styled.span`
+    height: 15px;
+    color: rgba(153, 153, 153, 1);
+    font-family: Montserrat;
+    font-style: SemiBold;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: center;
 `

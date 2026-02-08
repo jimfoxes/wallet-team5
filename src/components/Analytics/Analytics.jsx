@@ -6,10 +6,14 @@ import { ExpensesChart } from '../ExpensesChart/ExpensesChart'
 const Analytics = () => {
     return (
         <>
-            <S.AnalyticsTitle>Страница анализа расходов</S.AnalyticsTitle>
-            {/* <Calendar onPeriodChange={setPeriod} />
-            <ExpensesChart period={period} /> */}
-            <ExpensesChart />
+            <S.BodyContainer>
+                <S.AnalyticsTitle>Анализ расходов</S.AnalyticsTitle>
+                <S.ContentContainer>
+                    {/* <Calendar onPeriodChange={setPeriod} />
+                <ExpensesChart period={period} /> */}
+                    <ExpensesChart />
+                </S.ContentContainer>
+            </S.BodyContainer>
         </>
     )
 }

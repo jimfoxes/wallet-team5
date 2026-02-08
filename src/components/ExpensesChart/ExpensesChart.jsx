@@ -1,29 +1,30 @@
 import * as S from './ExpensesChart.styled'
 
 const categoryColors = {
-    Еда: '#FF6384',
-    Транспорт: '#36A2EB',
-    Жилье: '#FFCE56',
-    Развлечения: '#4BC0C0',
-    Образование: '#9966FF',
-    Другое: '#FF9F40',
+    Еда: 'rgba(217, 182, 255, 1);',
+    Транспорт: 'rgba(255, 181, 61, 1);',
+    Жилье: 'rgba(110, 228, 254, 1);',
+    Развлечения: 'rgba(176, 174, 255, 1);',
+    Образование: 'rgba(188, 236, 48, 1);',
+    Другое: 'rgba(255, 185, 184, 1);',
 }
 
 const mockExpenses = [
-    { date: '2025-04-01', category: 'Еда', amount: 800 },
-    { date: '2025-04-01', category: 'Транспорт', amount: 200 },
-    { date: '2025-04-01', category: 'Жилье', amount: 1500 },
-    { date: '2025-04-05', category: 'Еда', amount: 1200 },
-    { date: '2025-04-05', category: 'Развлечения', amount: 800 },
-    { date: '2025-04-08', category: 'Еда', amount: 900 },
-    { date: '2025-04-08', category: 'Образование', amount: 2500 },
+    { date: '2025-04-01', category: 'Еда', amount: 21990 },
+    { date: '2025-04-01', category: 'Транспорт', amount: 11046 },
+    { date: '2025-04-01', category: 'Жилье', amount: 0 },
+    { date: '2025-04-05', category: 'Еда', amount: 0 },
+    { date: '2025-04-05', category: 'Развлечения', amount: 13050 },
+    { date: '2025-04-08', category: 'Еда', amount: 0 },
+    { date: '2025-04-08', category: 'Образование', amount: 0 },
+    { date: '2025-04-08', category: 'Другое', amount: 19106 },
 ]
 
 // Заглушка: период (в будущем — из календаря)
 const useSelectedPeriod = () => {
     return {
         from: '2025-04-01',
-        to: '2025-04-02',
+        to: '2025-04-08',
     }
 }
 
@@ -73,18 +74,38 @@ export const ExpensesChart = () => {
     const isSameDay = (dateA, dateB) => {
         return new Date(dateA).toDateString() === new Date(dateB).toDateString()
     }
+    // Форматируем числа в суммах
+    const formatNumber = (num) => {
+        return new Intl.NumberFormat('ru-RU').format(num)
+    }
 
     return (
         <S.ChartContainer>
-            <S.SelectedPeriod>
-                {from && to
-                    ? isSameDay(from, to)
-                        ? `Расходы за ${formatDate(from)}`
-                        : `Расходы за ${formatDate(from)} – ${formatDate(to)}`
-                    : 'Период не выбран'}
-            </S.SelectedPeriod>
+            <S.TotalAmount>{formatNumber(total)} ₽</S.TotalAmount>
 
-            <S.TotalAmount>Итого: {total} ₽</S.TotalAmount>
+            <S.SelectedPeriodContainer>
+                {from && to ? (
+                    isSameDay(from, to) ? (
+                        <>
+                            <S.PrefixText>Расходы за </S.PrefixText>
+                            <S.DateContainer>
+                                <S.DateText>{formatDate(from)}</S.DateText>
+                            </S.DateContainer>
+                        </>
+                    ) : (
+                        <>
+                            <S.PrefixText>Расходы за </S.PrefixText>
+                            <S.DateContainer>
+                                <S.DateText>{formatDate(from)}</S.DateText>
+                                <S.SeparatorText> – </S.SeparatorText>
+                                <S.DateText>{formatDate(to)}</S.DateText>
+                            </S.DateContainer>
+                        </>
+                    )
+                ) : (
+                    <S.NoDataText>Период не выбран</S.NoDataText>
+                )}
+            </S.SelectedPeriodContainer>
 
             <S.Chart>
                 {categories.map((category) => {
@@ -94,7 +115,7 @@ export const ExpensesChart = () => {
                     return (
                         <S.BarWrapper key={category}>
                             <S.BarValueAbove>
-                                {amount > 0 ? `${amount} ₽` : ''}
+                                {amount > 0 ? `${formatNumber(amount)} ₽` : ''}
                             </S.BarValueAbove>
                             <S.Bar
                                 $height={height}
