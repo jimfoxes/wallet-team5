@@ -3,5 +3,10 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
-    "eslint.validate": ["javascript", "javascriptreact", "jsx"]
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "jsx"
+    ],
+    "git.ignoreLimitWarning": true
 }
