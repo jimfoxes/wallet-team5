@@ -1,3 +1,4 @@
+ header&table_analysis
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -33,5 +34,6 @@ export default function Header() {
 
             <LogoutButton onClick={handleLogout}>Выйти</LogoutButton>
         </Wrapper>
-    )
-}
+
+
+

@@ -1,3 +1,4 @@
+ header&table_analysis
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Header from './components/Header/Header'
@@ -12,5 +13,14 @@ export default function App() {
                 <Route path="/expenses" element={<MyExpenses />} />
             </Routes>
         </BrowserRouter>
+
+import AppRoutes from './components/AppRoutes'
+
+function App() {
+    return (
+        <>
+            <AppRoutes />
+        </>
+ main
     )
 }

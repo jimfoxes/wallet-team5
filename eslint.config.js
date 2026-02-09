@@ -1,47 +1,59 @@
 import js from '@eslint/js'
 import globals from 'globals'
-import pluginReact from 'eslint-plugin-react'
-import { defineConfig } from 'eslint/config'
-import prettierConfig from 'eslint-config-prettier'
-import pluginPrettier from 'eslint-plugin-prettier'
-import prettier from 'prettier'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import prettier from 'eslint-plugin-prettier/recommended'
+// опционально, если хочешь проверять несуществующие компоненты
+import react from 'eslint-plugin-react'
 
-export default defineConfig([
+export default [
+    { ignores: ['dist/**', 'node_modules/**'] },
+
+    prettier,
+
+    js.configs.recommended, // ← даёт no-undef, no-unused-vars и другие базовые правила
+
     {
-        files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
-        plugins: {
-            js,
-            prettier: pluginPrettier,
-        },
-        extends: ['js/recommended'],
+        files: ['**/*.{js,jsx}'],
         languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.node,
+            globals: globals.browser,
+            parserOptions: {
+                ecmaVersion: 'latest',
+                ecmaFeatures: { jsx: true },
+                sourceType: 'module',
             },
         },
+        plugins: {
+            'react-hooks': reactHooks,
+            'react-refresh': reactRefresh,
+            react: react, // ← раскомментировать, если нужен
+        },
         rules: {
-            // Отключаем встроенное правило о концах строк
-            'linebreak-style': 'off',
+            ...reactHooks.configs.recommended.rules,
+            'react-refresh/only-export-components': [
+                'warn',
+                { allowConstantExport: true },
+            ],
 
-            // Правила Prettier через ESLint
-            'prettier/prettier': [
+            // Игнорируем React-компоненты и _переменные
+            'no-unused-vars': [
                 'error',
                 {
-                    endOfLine: 'auto', // Автоматически определять окончания строк
-                    parser: 'babel', // или 'typescript' если используете TS
-                    usePrettierrc: true, // Использовать настройки из .prettierrc.yaml
+                    varsIgnorePattern: '^_[A-Za-z]*|[A-Z][A-Za-z]*$',
                 },
             ],
 
-            // React специфичные правила
-            'react/react-in-jsx-scope': 'off', // Для React 17+
+            // Опционально: включаем проверку неопределённых JSX-компонентов
+            'react/jsx-no-undef': 'error',
+
+            // Можно переопределить что-то из prettier, если нужно
+            'prettier/prettier': [
+                'error',
+                {
+                    endOfLine: 'auto',
+                    // ... другие твои предпочтения
+                },
+            ],
         },
     },
-
-    // Конфигурация React
-    pluginReact.configs.flat.recommended,
-
-    // Отключаем ESLint правила, которые конфликтуют с Prettier
-    prettierConfig,
-])
+]
