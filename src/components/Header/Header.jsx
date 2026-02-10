@@ -1,9 +1,12 @@
-import * as S from './Header.styled/'
+import * as S from './Header.styled'
 
-export const Header = () => {
+export const Header = ({ onLogout }) => {
     return (
-        <S.header>
-            <S.headerBlock>Шапочка</S.headerBlock>
-        </S.header>
+        <S.Header>
+            <S.HeaderBlock>Шапочка</S.HeaderBlock>
+            {onLogout && (
+                <S.LogoutButton onClick={onLogout}>Выйти</S.LogoutButton>
+            )}
+        </S.Header>
     )
 }

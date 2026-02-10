@@ -1,11 +1,7 @@
-import AppRoutes from './components/AppRoutes'
+import { AppRoutes } from './components/AppRoutes'
 
 function App() {
-    return (
-        <>
-            <AppRoutes />
-        </>
-    )
+    return <AppRoutes />
 }
 
 export default App

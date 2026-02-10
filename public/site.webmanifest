@@ -1,0 +1,9 @@
+{
+  "name": "Wallet App",
+  "short_name": "Wallet",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "description": "Приложение для анализа расходов"
+}
