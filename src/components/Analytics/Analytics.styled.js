@@ -1,5 +1,49 @@
 import styled from 'styled-components'
 
+Верстка-календаря-на-странице-Анализов-без-логики
+export const AnalyticsContainer = styled.div`
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
+    padding-top: 36px;
+    padding-bottom: 80px;
+    background-color: rgba(244, 245, 246, 1);
+`
+
+export const AnalyticsTitle = styled.h1`
+    font-family: Montserrat;
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 32px;
+    color: rgba(0, 0, 0, 1);
+    line-height: 150%;
+    letter-spacing: 0px;
+    text-align: left;
+
+    @media screen and (max-width: 1024px) {
+        text-align: center;
+    }
+`
+
+export const ColumnsLayout = styled.div`
+    display: flex;
+    column-gap: 32px;
+    margin-top: 32px;
+
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+        align-items: center;
+    }
+`
+
+export const CalendarColumn = styled.div`
+    display: flex;
+    column-gap: 32px;
+    width: 379px;
+    height: 540px;
+    overflow: hidden;
+    border-radius: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
 export const BodyContainer = styled.div`
     padding-left: 120px;
     padding-right: 120px;
@@ -19,16 +63,12 @@ export const AnalyticsTitle = styled.h1`
     letter-spacing: 0px;
     text-align: left;
     padding-top: 36px;
+main
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 3px;
-        background: linear-gradient(90deg, #3498db, #2ecc71);
+    @media screen and (max-width: 1024px) {
+        margin-bottom: 32px;
+        border-radius: 0;
+        height: 646px;
     }
     @media (max-width: 768px) {
         width: 226px;
