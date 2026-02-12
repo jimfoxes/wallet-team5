@@ -1,26 +1,35 @@
 import styled from 'styled-components'
 
 export const FormWrapper = styled.div`
-    width: 379px;
-    margin-top: 180px;
-    margin-left: 941px;
-    padding: 32px;
-    border-radius: 30px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: left;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 `
 
 export const Title = styled.h2`
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-family: Montserrat;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+    color: rgba(0, 0, 0, 1);
+    margin: 0 0 8px 0;
+    padding: 0;
 `
 
 export const Label = styled.label`
     display: block;
-    margin-top: 24px;
+    margin-top: 20px;
     margin-bottom: 8px;
+    font-family: Montserrat;
     font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: rgba(0, 0, 0, 1);
+
+    &:first-of-type {
+        margin-top: 16px;
+    }
 `
 
 export const ErrorStar = styled.span`
@@ -33,9 +42,20 @@ export const Input = styled.input`
     padding: 12px;
     border-radius: 6px;
     border: 0.5px solid rgba(153, 153, 153, 1);
+    font-family: Montserrat;
     font-size: 12px;
     font-weight: 400;
+    line-height: 15px;
     outline: none;
+    box-sizing: border-box;
+
+    &::placeholder {
+        color: rgba(153, 153, 153, 1);
+        font-family: Montserrat;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 15px;
+    }
 
     &.valid {
         background-color: #dff6e4;
@@ -52,22 +72,25 @@ export const CategoriesWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    margin-bottom: 4px;
 `
 
 export const CategoryButton = styled.button`
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    gap: 8px;
+    font-family: Montserrat;
     font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
     padding: 8.5px 20px;
     border-radius: 30px;
     border: none;
     background-color: ${({ selected }) => (selected ? '#dff6e4' : '#f4f4f4')};
     color: ${({ selected }) => (selected ? '#2e7d32' : '#222')};
     cursor: pointer;
-    transition:
-        background-color 0.2s,
-        color 0.2s;
+    transition: all 0.2s;
 
     img {
         width: 14px;
@@ -79,10 +102,8 @@ export const CategoryButton = styled.button`
         `}
     }
 
-    &:disabled {
-        background-color: #e0e0e0;
-        color: #888;
-        cursor: not-allowed;
+    &:hover {
+        background-color: ${({ selected }) => (selected ? '#c8e6c9' : '#e0e0e0')};
     }
 `
 
@@ -90,14 +111,31 @@ export const SubmitButton = styled.button`
     width: 100%;
     padding: 12px;
     border-radius: 8px;
+    font-family: Montserrat;
     font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
     border: none;
     cursor: pointer;
-    margin-top: 24px;
+    margin-top: 32px;
     background-color: ${({ $allValid, $submitted }) =>
         $submitted && !$allValid
             ? 'rgba(153, 153, 153, 1)'
             : 'rgba(31, 164, 108, 1)'};
     color: #fff;
     transition: background-color 0.2s;
+
+    &:hover {
+        background-color: ${({ $allValid, $submitted }) =>
+            $submitted && !$allValid
+                ? 'rgba(133, 133, 133, 1)'
+                : 'rgba(41, 184, 128, 1)'};
+    }
+
+    &:active {
+        background-color: ${({ $allValid, $submitted }) =>
+            $submitted && !$allValid
+                ? 'rgba(113, 113, 113, 1)'
+                : 'rgba(21, 144, 98, 1)'};
+    }
 `

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import {
     FormWrapper,
     Title,
@@ -20,33 +21,38 @@ const categories = [
 ]
 
 const isValidDate = (value) => {
-    const regex = /^(\d{2})\.(\d{2})\.(\d{2}|\d{4})$/
+    const regex = /^(\d{2})\.(\d{2})\.(\d{4})$/
     if (!regex.test(value)) return false
     const [day, month, year] = value.split('.').map(Number)
     if (day < 1 || day > 31 || month < 1 || month > 12) return false
-    if (year < 0) return false
-    if (String(year).length !== 2 && String(year).length !== 4) return false
+    if (year < 2000 || year > 2100) return false
     return true
 }
 
-export default function NewExpenseForm() {
+const MyExpenses = ({ onAddExpense }) => {
     const [description, setDescription] = useState('')
     const [category, setCategory] = useState('')
     const [date, setDate] = useState('')
     const [amount, setAmount] = useState('')
-
     const [submitted, setSubmitted] = useState(false)
 
     const validDesc = description.trim().length > 0
     const validDate = isValidDate(date)
-    const validAmount = Number(amount) > 0
+    const validAmount = Number(amount) > 0 && !isNaN(Number(amount))
     const validCategory = category !== ''
-
     const allValid = validDesc && validDate && validAmount && validCategory
 
     const handleSubmit = () => {
         setSubmitted(true)
         if (allValid) {
+            if (onAddExpense) {
+                onAddExpense({
+                    description,
+                    category,
+                    date,
+                    amount: Number(amount)
+                })
+            }
             setDescription('')
             setCategory('')
             setDate('')
@@ -97,7 +103,7 @@ export default function NewExpenseForm() {
                 {submitted && !validDate && <ErrorStar>*</ErrorStar>}
             </Label>
             <Input
-                placeholder="Введите дату"
+                placeholder="Введите дату (ДД.ММ.ГГГГ)"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className={submitted ? (validDate ? 'valid' : 'error') : ''}
@@ -123,3 +129,5 @@ export default function NewExpenseForm() {
         </FormWrapper>
     )
 }
+
+export default MyExpenses

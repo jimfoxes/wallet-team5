@@ -1,9 +1,10 @@
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import { AuthForm } from './AuthForm/AuthForm'
-import Analytics from './Analytics/Analytics'
+import Analytics from '../pages/Analytics'  
+import MyExpensesPage from '../pages/MyExpensesPage/MyExpensesPage'
 import { useState, useEffect } from 'react'
 import Header from './Header/Header'
-import MyExpenses from '../pages/MyExpenses'
+
 
 export default function AppRoutes() {
     const [isAuthenticated, setIsAuthenticated] = useState(
@@ -46,7 +47,7 @@ export default function AppRoutes() {
                 {isAuthenticated ? (
                     <>
                         <Route path="/" element={<Navigate to="/expenses" />} />
-                        <Route path="/expenses" element={<MyExpenses />} />
+                        <Route path="/expenses" element={<MyExpensesPage />} />
                         <Route path="/analytics" element={<Analytics />} />
                         <Route path="*" element={<Analytics />} />
                     </>
