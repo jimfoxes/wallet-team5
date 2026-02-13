@@ -34,23 +34,29 @@ export const AuthForm = ({ isSignUp = false, onLogin }) => {
         !isSignUp || (name.trim() !== '' && name.trim().length >= 2)
 
     const allValid = isValidEmail && isValidPassword && isValidName
+    const showErrors = isSubmitted && !allValid
 
-    const showEmailError = isSubmitted && !isValidEmail
-    const showPasswordError = isSubmitted && !isValidPassword
-    const showNameError = isSubmitted && isSignUp && !isValidName
+    const handleFocus = () => {
+        if (isSubmitted) {
+            setIsSubmitted(false)
+            setError('')
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         setIsSubmitted(true)
 
-        if (!allValid) {
-            if (!isValidEmail) {
-                setError('Введите корректный email')
-            } else if (!isValidPassword) {
-                setError('Пароль должен быть не менее 6 символов')
-            } else if (isSignUp && !isValidName) {
-                setError('Имя должно быть не менее 2 символов')
-            }
+        if (!isValidEmail) {
+            setError('Введите корректный email')
+            return
+        }
+        if (!isValidPassword) {
+            setError('Пароль должен быть не менее 6 символов')
+            return
+        }
+        if (isSignUp && !isValidName) {
+            setError('Имя должно быть не менее 2 символов')
             return
         }
 
@@ -87,19 +93,19 @@ export const AuthForm = ({ isSignUp = false, onLogin }) => {
                 <Title>{isSignUp ? 'Регистрация' : 'Вход'}</Title>
 
                 <Form onSubmit={handleSubmit}>
-                    <ErrorMessage $visible={!!error}>{error}</ErrorMessage>
-
                     {isSignUp && (
                         <InputWrapper>
                             <Input
                                 type="text"
-                                placeholder="Имя"
+                                placeholder="Имя*"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                $error={showNameError}
-                                $success={
-                                    !showNameError && name.trim().length > 0
+                                onFocus={handleFocus}
+                                $error={
+                                    (showErrors && !isValidEmail) ||
+                                    (!!error && isSubmitted && isValidEmail)
                                 }
+                                $success={!showErrors && isValidName}
                                 autoFocus
                             />
                         </InputWrapper>
@@ -108,13 +114,15 @@ export const AuthForm = ({ isSignUp = false, onLogin }) => {
                     <InputWrapper>
                         <Input
                             type="email"
-                            placeholder="Эл. почта"
+                            placeholder="Эл. почта*"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            $error={showEmailError}
-                            $success={
-                                !showEmailError && email.trim().length > 0
+                            onFocus={handleFocus}
+                            $error={
+                                (showErrors && !isValidEmail) ||
+                                (!!error && isSubmitted && isValidEmail)
                             }
+                            $success={!showErrors && isValidEmail}
                             autoFocus={!isSignUp}
                         />
                     </InputWrapper>
@@ -122,17 +130,21 @@ export const AuthForm = ({ isSignUp = false, onLogin }) => {
                     <InputWrapper>
                         <Input
                             type="password"
-                            placeholder="Пароль"
+                            placeholder="Пароль*"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            $error={showPasswordError}
-                            $success={
-                                !showPasswordError && password.trim().length > 0
+                            onFocus={handleFocus}
+                            $error={
+                                (showErrors && !isValidEmail) ||
+                                (!!error && isSubmitted && isValidEmail)
                             }
+                            $success={!showErrors && isValidPassword}
                         />
                     </InputWrapper>
 
-                    <Button type="submit" disabled={isSubmitted && !allValid}>
+                    <ErrorMessage $visible={!!error}>{error}</ErrorMessage>
+
+                    <Button type="submit" disabled={showErrors}>
                         {isSignUp ? 'Зарегистрироваться' : 'Войти'}
                     </Button>
                 </Form>

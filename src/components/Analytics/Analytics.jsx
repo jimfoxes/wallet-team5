@@ -9,22 +9,18 @@ const Analytics = () => {
 
             <S.ColumnsLayout>
                 <S.CalendarColumn>
-                    <Calendar selectedDate="16.01.2026" onDateSelect={(date) => console.log(date)} />                    
+                    <Calendar
+                        selectedDate="16.01.2026"
+                        onDateSelect={(date) => console.log(date)}
+                    />
                 </S.CalendarColumn>
 
                 <S.ContentContainer>
                     <ExpensesChart />
-                </S.ContentContainer>                
+                </S.ContentContainer>
             </S.ColumnsLayout>
         </S.AnalyticsContainer>
-
-)}
+    )
+}
 
 export default Analytics
-
-// const [period, setPeriod] = useState({ from: '2025-04-01', to: '2025-04-07' 
-//убрать коммиты после создания и импорта календаря
-
-
-
-

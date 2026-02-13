@@ -16,7 +16,7 @@ export async function signIn({ login, password }) {
         )
         return response.data
     } catch (error) {
-        console.error('❌ Ошибка:', error.response?.data)
+        console.error('Ошибка:', error.response?.data)
         throw new Error(error.response?.data?.error || 'Ошибка авторизации')
     }
 }
@@ -35,7 +35,7 @@ export async function signUp({ name, login, password }) {
         )
         return response.data
     } catch (error) {
-        console.error('❌ Ошибка регистрации:', error.response?.data)
+        console.error('Ошибка регистрации:', error.response?.data)
         throw new Error(error.response?.data?.error || 'Ошибка регистрации')
     }
 }
