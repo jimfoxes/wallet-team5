@@ -85,7 +85,6 @@ export const Input = styled.input`
     background: #fff;
     font-size: 14px;
 
-    /* Сброс фокуса */
     &:focus {
         outline: none;
     }
@@ -95,18 +94,30 @@ export const Input = styled.input`
         $success &&
         !$error &&
         `
-            background: #f0e6ff;
-            border-color: #565eef;
-            &::placeholder {
-                color: #565eef;
-            }
+        background: #f0e6ff;
+        border-color: #565eef;
+        &::placeholder {
+            color: #565eef;
+        }
     `}
 
-    /* Фокус при ошибке или успехе */
-&:focus {
+    /* Ошибка */
+    ${({ $error }) =>
+        $error &&
+        `
+        background: rgba(255, 235, 235, 1);
+        border: 1px solid rgba(242, 80, 80, 1) !important;
+        color: #000000;
+        &::placeholder {
+            color: #d32f2f;
+        }
+    `}
+
+    /* Фокус при ошибке */
+    &:focus {
         ${({ $error }) =>
             $error &&
-            `border-color: #ff3333; box-shadow: 0 0 0 2px rgba(255, 51, 51, 0.2);`}
+            `border-color: #b71c1c; box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);`}
         ${({ $success, $error }) =>
             $success &&
             !$error &&
@@ -133,6 +144,27 @@ export const Input = styled.input`
         height: 39px;
     }
 `
+export const ErrorText = styled.p`
+    margin: 4px 0 0 16px;
+    color: #d32f2f;
+    font-family: Montserrat;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 15px;
+    letter-spacing: 0px;
+    text-align: left;
+
+    &::before {
+        content: '*';
+        color: #d32f2f;
+        margin-right: 4px;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 32px;
+        font-size: 13px;
+    }
+`
 export const Button = styled.button`
     width: 313px;
     height: 39px;
@@ -157,6 +189,12 @@ export const Button = styled.button`
         background: rgb(80, 0, 230);
     }
 
+    &:disabled {
+        background: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+    }
+
     @media (max-width: 768px) {
         width: calc(100% - 32px);
         margin-left: 16px;
@@ -167,15 +205,12 @@ export const Button = styled.button`
     }
 `
 export const ErrorMessage = styled.p`
-    position: absolute;
-    top: -22px;
-    left: 0;
-    right: 0;
-    margin: 0;
-    padding: 2px 0;
     background: #fff;
-    color: #ff0000;
-    font-size: 13px;
+    color: rgba(248, 77, 77, 1);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: 0%;
     text-align: center;
     border-radius: 4px;
     opacity: ${(props) => (props.$visible ? 1 : 0)};
@@ -185,7 +220,7 @@ export const ErrorMessage = styled.p`
 
     @media (max-width: 768px) {
         font-size: 14px;
-        top: -26px;
+        margin: 10px 0 14px;
     }
 `
 export const LinkText = styled.p`

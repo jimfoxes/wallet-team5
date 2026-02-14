@@ -66,3 +66,4 @@ export const ContentContainer = styled.div`
     height: 540px;
     flex-grow: 1;
 `
+
