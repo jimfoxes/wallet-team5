@@ -8,7 +8,7 @@ export const AnalyticsContainer = styled.div`
     background-color: rgba(244, 245, 246, 1);
     box-sizing: border-box;
 
-    @media (max-width: 768px) {
+    @media (max-width: 430px) {
         padding-left: 16px;
         padding-right: 16px;
     }
@@ -24,31 +24,28 @@ export const AnalyticsTitle = styled.h1`
     letter-spacing: 0px;
     text-align: left;
 
-    @media screen and (max-width: 1024px) {
-        margin-bottom: 32px;
-        border-radius: 0;
-        height: 646px;
-        text-align: center; //???
+    @media (max-width: 1024px) {
+        text-align: center;
     }
 
     @media (max-width: 768px) {
-        width: 226px;
-        height: 29px;
-        padding-top: 24px;
         font-size: 24px;
-        line-height: 29px;
-        text-align: center;
+        line-height: 100%;
+        letter-spacing: 0px;
     }
 `
 
 export const ColumnsLayout = styled.div`
     display: flex;
-    column-gap: 32px;
+    gap: 32px;
     margin-top: 32px;
 
-    @media screen and (max-width: 1024px) {
+    @media (max-width: 1024px) {
         flex-direction: column;
         align-items: center;
+    }
+
+    @media (max-width: 768px) {
     }
 `
 
@@ -60,10 +57,17 @@ export const CalendarColumn = styled.div`
     overflow: hidden;
     border-radius: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 1);
+
+    @media (max-width: 768px) {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+        justify-content: center;
+    }
 `
 
 export const ContentContainer = styled.div`
     height: 540px;
     flex-grow: 1;
 `
-

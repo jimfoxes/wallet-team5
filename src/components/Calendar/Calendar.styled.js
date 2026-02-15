@@ -7,6 +7,10 @@ export const CalendarContainer = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+        width: 375px;
+    }
 `
 
 export const CalendarHeader = styled.div`
@@ -19,7 +23,7 @@ export const CalendarHeader = styled.div`
     z-index: 10;
     flex-shrink: 0;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 768px) {
         height: 127px;
         padding: 24px 16px 0 16px;
     }
@@ -35,7 +39,7 @@ export const CalendarTitle = styled.h2`
     color: rgba(0, 0, 0, 1);
     margin-bottom: 24px;
 
-    @media screen and (max-width: 1024px) {
+    @media (max-width: 768px) {
         display: none;
     }
 `
@@ -43,7 +47,7 @@ export const CalendarTitle = styled.h2`
 export const CalendarTitleMobile = styled.div`
     display: none;
 
-    @media screen and (max-width: 1024px) {
+    @media (max-width: 768px) {
         display: block;
         align-items: center;
         justify-content: space-between;
@@ -179,44 +183,68 @@ export const MonthDay = styled.div`
     color: rgba(0, 0, 0, 1);
     cursor: pointer;
     transition: all 0.2s ease;
-    
-    /* Пустые ячейки - полностью невидимые */
+    position: relative;
+
+    /* Пустые ячейки */
     &.empty {
         background: transparent;
         border: none;
         cursor: default;
-        visibility: hidden; /* ← КЛЮЧЕВОЕ ИЗМЕНЕНИЕ */
+        visibility: hidden;
     }
 
-    &.disabled {
-        opacity: 0.3;
-        cursor: default;
-    }
-
-    /* При наведении */
-    &:not(.empty):not(.disabled):not(.selected):hover {
-        background: rgba(241, 235, 253, 1);
-        color: rgba(115, 52, 234, 1);
-    }
-
-    /* Активная дата */
-    &.selected {
-        background: rgba(241, 235, 253, 1);
-        color: rgba(115, 52, 234, 1);
-        font-weight: 600;
-    }
-
-    /* Сегодня — только жирный текст, без фона */
+    /* Сегодня */
     &.current {
         font-weight: 700;
         color: rgba(0, 0, 0, 1);
+    }
+
+    /* Выходные дни */
+    &.weekend:not(.in-period):not(.period-boundary):not(.in-temp-period):not(
+            .temp-boundary
+        ) {
+        color: rgba(0, 0, 0, 1);
+    }
+
+    /* При наведении */
+    &:not(.empty):not(.in-period):not(.period-boundary):not(.temp-boundary):not(
+            .in-temp-period
+        ):hover {
+        background: rgba(241, 235, 253, 1);
+        color: rgba(115, 52, 234, 1);
+    }
+
+    /* Даты внутри выбранного периода */
+    &.in-period {
+        background: rgba(241, 235, 253, 1);
+        color: rgba(115, 52, 234, 1);
+    }
+
+    /* Начало и конец периода */
+    &.period-boundary {
+        background: rgba(115, 52, 234, 1);
+        color: rgba(255, 255, 255, 1);
+        font-weight: 600;
+    }
+
+    /* Временный период при выборе */
+    &.in-temp-period {
+        background: rgba(241, 235, 253, 1);
+        color: rgba(115, 52, 234, 1);
+    }
+
+    /* Начало и конец временного периода */
+    &.temp-boundary {
+        background: rgba(115, 52, 234, 1);
+        color: rgba(255, 255, 255, 1);
+        font-weight: 600;
     }
 `
 
 export const CalendarFooter = styled.div`
     display: none;
 
-    @media screen and (max-width: 1024px) {
+    @media (max-width: 768px) {
         display: flex;
         width: 100%;
         height: 87px;
@@ -243,4 +271,15 @@ export const CalendarBtn = styled.button`
     color: rgba(255, 255, 255, 1);
     border-radius: 6px;
     border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+        background: rgba(95, 32, 214, 1);
+    }
 `
