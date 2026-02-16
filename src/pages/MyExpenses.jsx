@@ -50,7 +50,7 @@ const MyExpenses = ({ onAddExpense }) => {
                     description,
                     category,
                     date,
-                    amount: Number(amount)
+                    amount: Number(amount),
                 })
             }
             setDescription('')

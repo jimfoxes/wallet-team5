@@ -95,13 +95,14 @@ export const TableWrapper = styled.div`
     }
 `
 
-export const FormWrapper = styled.div` 
+export const FormWrapper = styled.div`
     position: absolute;
     top: 180px;
     left: 941px;
     width: 379px;
     height: 618px;
     z-index: 1;
+    text-align: left;
 
     & > * {
         width: 100% !important;
@@ -126,7 +127,7 @@ export const FormWrapper = styled.div`
         max-width: 379px;
         height: auto;
         margin: 0 auto;
-        
+
         & > * {
             height: auto !important;
             min-height: 618px;
@@ -136,7 +137,7 @@ export const FormWrapper = styled.div`
     @media (max-width: 768px) {
         max-width: 100%;
         padding: 0;
-        
+
         & > * {
             padding: 24px !important;
             border-radius: 20px !important;
@@ -156,7 +157,7 @@ export const ErrorMessage = styled.div`
     border-radius: 8px;
     font-size: 14px;
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `
 
 export const LoadingText = styled.div`

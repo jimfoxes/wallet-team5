@@ -33,13 +33,13 @@ export const StyledLink = styled(NavLink)`
 
     &.active {
         font-weight: 600;
-        color: #20bf6b;
+        color: #7334ea !important;
         text-decoration: underline;
         text-underline-offset: 4px;
     }
 
     &:hover {
-        color: #20bf6b;
+        color: #7334ea !important;
     }
 `
 
@@ -50,6 +50,6 @@ export const LogoutButton = styled.button`
     cursor: pointer;
 
     &:hover {
-        color: #20bf6b;
+        color: #7334ea;
     }
 `

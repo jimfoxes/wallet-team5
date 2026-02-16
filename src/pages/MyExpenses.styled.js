@@ -58,8 +58,8 @@ export const Input = styled.input`
     }
 
     &.valid {
-        background-color: #dff6e4;
-        border-color: #2e7d32;
+        background-color: #f1ebfd;
+        border-color: #7334ea;
     }
 
     &.error {
@@ -87,8 +87,8 @@ export const CategoryButton = styled.button`
     padding: 8.5px 20px;
     border-radius: 30px;
     border: none;
-    background-color: ${({ selected }) => (selected ? '#dff6e4' : '#f4f4f4')};
-    color: ${({ selected }) => (selected ? '#2e7d32' : '#222')};
+    background-color: ${({ selected }) => (selected ? '#F1EBFD' : '#f4f4f4')};
+    color: ${({ selected }) => (selected ? '#7334EA' : '#222')};
     cursor: pointer;
     transition: all 0.2s;
 
@@ -98,12 +98,13 @@ export const CategoryButton = styled.button`
         ${({ selected }) =>
             selected &&
             `
-            filter: brightness(0) saturate(100%) invert(46%) sepia(80%) saturate(635%) hue-rotate(92deg) brightness(94%) contrast(91%);
+            filter: invert(32%) sepia(91%) saturate(7456%) hue-rotate(259deg) brightness(95%) contrast(97%);
         `}
     }
 
     &:hover {
-        background-color: ${({ selected }) => (selected ? '#c8e6c9' : '#e0e0e0')};
+        background-color: ${({ selected }) =>
+            selected ? '#F1EBFD' : '#e0e0e0'};
     }
 `
 
@@ -121,7 +122,7 @@ export const SubmitButton = styled.button`
     background-color: ${({ $allValid, $submitted }) =>
         $submitted && !$allValid
             ? 'rgba(153, 153, 153, 1)'
-            : 'rgba(31, 164, 108, 1)'};
+            : 'rgba(115, 52, 234, 1)'};
     color: #fff;
     transition: background-color 0.2s;
 
@@ -129,13 +130,13 @@ export const SubmitButton = styled.button`
         background-color: ${({ $allValid, $submitted }) =>
             $submitted && !$allValid
                 ? 'rgba(133, 133, 133, 1)'
-                : 'rgba(41, 184, 128, 1)'};
+                : 'rgba(115, 52, 234, 1)'};
     }
 
     &:active {
         background-color: ${({ $allValid, $submitted }) =>
             $submitted && !$allValid
                 ? 'rgba(113, 113, 113, 1)'
-                : 'rgba(21, 144, 98, 1)'};
+                : 'rgba(115, 52, 234, 1)'};
     }
 `
