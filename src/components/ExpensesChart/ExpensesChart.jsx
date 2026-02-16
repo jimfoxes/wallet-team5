@@ -1,6 +1,32 @@
 import * as S from './ExpensesChart.styled'
 import { useNavigate } from 'react-router-dom'
 
+// Конвертируем DD.MM.YYYY → YYYY-MM-DD
+const convertToISO = (dateStr) => {
+    if (!dateStr) return null
+    const [day, month, year] = dateStr.split('.')
+    return `${year}-${month}-${day}`
+}
+
+const parseDate = (dateStr) => {
+    if (!dateStr) return null
+
+    // Если формат DD.MM.YYYY
+    if (dateStr.includes('.')) {
+        const [day, month, year] = dateStr.split('.')
+        return new Date(+year, +month - 1, +day)
+    }
+
+    // Если формат YYYY-MM-DD
+    if (dateStr.includes('-')) {
+        const [year, month, day] = dateStr.split('-')
+        return new Date(+year, +month - 1, +day)
+    }
+
+    // На всякий случай — fallback
+    return new Date(dateStr)
+}
+
 const categoryColors = {
     Еда: 'rgba(217, 182, 255, 1);',
     Транспорт: 'rgba(255, 181, 61, 1);',
@@ -11,37 +37,35 @@ const categoryColors = {
 }
 
 const mockExpenses = [
-    { date: '2025-04-01', category: 'Еда', amount: 21990 },
-    { date: '2025-04-01', category: 'Транспорт', amount: 11046 },
-    { date: '2025-04-01', category: 'Жилье', amount: 0 },
-    { date: '2025-04-05', category: 'Еда', amount: 0 },
-    { date: '2025-04-05', category: 'Развлечения', amount: 13050 },
-    { date: '2025-04-08', category: 'Еда', amount: 0 },
-    { date: '2025-04-08', category: 'Образование', amount: 0 },
-    { date: '2025-04-08', category: 'Другое', amount: 19106 },
+    { id: 1, description: 'Пятерочка', category: 'Еда', date: '03.07.2026', amount: 3500 },
+    { id: 2, description: 'Яндекс Такси', category: 'Транспорт', date: '03.07.2026', amount: 730 },
+    { id: 3, description: 'Аптека Вита', category: 'Другое', date: '03.07.2026', amount: 1200 },
+    { id: 4, description: 'Бургер Кинг', category: 'Еда', date: '03.07.2026', amount: 950 },
+    { id: 5, description: 'Деливери', category: 'Еда', date: '02.07.2026', amount: 1320 },
+    { id: 6, description: 'Кофейня №1', category: 'Еда', date: '02.07.2026', amount: 400 },
+    { id: 7, description: 'Бильярд', category: 'Развлечения', date: '29.06.2026', amount: 600 },
+    { id: 8, description: 'Перекресток', category: 'Еда', date: '29.06.2026', amount: 2360 },
+    { id: 9, description: 'Лукойл', category: 'Транспорт', date: '29.06.2026', amount: 1000 },
+    { id: 10, description: 'Летуаль', category: 'Другое', date: '29.06.2026', amount: 4300 },
+    { id: 11, description: 'Яндекс Такси', category: 'Транспорт', date: '28.06.2026', amount: 320 },
+    { id: 12, description: 'Перекресток', category: 'Еда', date: '28.06.2026', amount: 1360 },
+    { id: 13, description: 'Деливери', category: 'Еда', date: '28.06.2026', amount: 2320 },
+    { id: 14, description: 'Вкусвилл', category: 'Еда', date: '27.06.2026', amount: 1220 },
+    { id: 15, description: 'Кофейня №1', category: 'Еда', date: '27.06.2026', amount: 920 },
+    { id: 16, description: 'Вкусвилл', category: 'Еда', date: '26.06.2026', amount: 840 },
+    { id: 17, description: 'Кофейня №1', category: 'Еда', date: '26.06.2026', amount: 920 },
 ]
 
-const useSelectedPeriod = () => {
-    return {
-        from: '2025-04-01',
-        to: '2025-04-08',
-    }
+const isDateInRange = (expenseDate, from, to) => {
+    const expense = parseDate(expenseDate)
+    const start = from ? parseDate(from) : new Date()
+    const end = to ? parseDate(to) : new Date()
+    end.setHours(23, 59, 59, 999)
+    return expense >= start && expense <= end
 }
 
-const isDateInRange = (dateStr, from, to) => {
-    const date = new Date(dateStr)
-    const fromDay = new Date(from)
-    const toDay = new Date(to)
-    toDay.setHours(23, 59, 59, 999)
-    return date >= fromDay && date <= toDay
-}
-
-export const ExpensesChart = () => {
-    const { from, to } = useSelectedPeriod() // ← заменится позже, когда появится календарь
-    //     export const ExpensesChart = ({ period }) => {
-    //     const { from, to } = period
-    //     // убрать useSelectedPeriod()
-    // }
+export const ExpensesChart = ({ period }) => {
+    const { from, to } = period || {}
     const navigate = useNavigate()
 
     const filteredExpenses = mockExpenses.filter((expense) =>
@@ -62,20 +86,22 @@ export const ExpensesChart = () => {
     const maxAmount = Math.max(...Object.values(categoryTotals), 1)
 
     const formatDate = (dateStr) => {
-        const date = new Date(dateStr)
+        const date = parseDate(dateStr)
         const options = { day: 'numeric', month: 'long', year: 'numeric' }
         const formatted = new Intl.DateTimeFormat('ru-RU', options).format(date)
         return formatted.replace(/ г\.$/, '')
     }
 
-    const isSameDay = (dateA, dateB) => {
-        return new Date(dateA).toDateString() === new Date(dateB).toDateString()
+    const isSameDay = (a, b) => {
+        return parseDate(a).toDateString() === parseDate(b).toDateString()
     }
+
     const formatNumber = (num) => {
         return new Intl.NumberFormat('ru-RU').format(num)
     }
+
     const handleCalendarClick = () => {
-        navigate('/calendar') // ← пока нет страницы — можно временно
+        navigate('/analytics')
     }
 
     return (
