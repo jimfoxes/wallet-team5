@@ -8,6 +8,25 @@ const convertToISO = (dateStr) => {
     return `${year}-${month}-${day}`
 }
 
+const parseDate = (dateStr) => {
+    if (!dateStr) return null
+
+    // Если формат DD.MM.YYYY
+    if (dateStr.includes('.')) {
+        const [day, month, year] = dateStr.split('.')
+        return new Date(+year, +month - 1, +day)
+    }
+
+    // Если формат YYYY-MM-DD
+    if (dateStr.includes('-')) {
+        const [year, month, day] = dateStr.split('-')
+        return new Date(+year, +month - 1, +day)
+    }
+
+    // На всякий случай — fallback
+    return new Date(dateStr)
+}
+
 const categoryColors = {
     Еда: 'rgba(217, 182, 255, 1);',
     Транспорт: 'rgba(255, 181, 61, 1);',
@@ -18,20 +37,29 @@ const categoryColors = {
 }
 
 const mockExpenses = [
-    { date: '2026-01-01', category: 'Еда', amount: 21990 },
-    { date: '2026-01-01', category: 'Транспорт', amount: 11046 },
-    { date: '2026-01-01', category: 'Жилье', amount: 0 },
-    { date: '2026-01-05', category: 'Еда', amount: 0 },
-    { date: '2026-01-05', category: 'Развлечения', amount: 13050 },
-    { date: '2026-01-08', category: 'Еда', amount: 0 },
-    { date: '2026-01-08', category: 'Образование', amount: 0 },
-    { date: '2026-01-08', category: 'Другое', amount: 19106 },
+    { id: 1, description: 'Пятерочка', category: 'Еда', date: '03.07.2026', amount: 3500 },
+    { id: 2, description: 'Яндекс Такси', category: 'Транспорт', date: '03.07.2026', amount: 730 },
+    { id: 3, description: 'Аптека Вита', category: 'Другое', date: '03.07.2026', amount: 1200 },
+    { id: 4, description: 'Бургер Кинг', category: 'Еда', date: '03.07.2026', amount: 950 },
+    { id: 5, description: 'Деливери', category: 'Еда', date: '02.07.2026', amount: 1320 },
+    { id: 6, description: 'Кофейня №1', category: 'Еда', date: '02.07.2026', amount: 400 },
+    { id: 7, description: 'Бильярд', category: 'Развлечения', date: '29.06.2026', amount: 600 },
+    { id: 8, description: 'Перекресток', category: 'Еда', date: '29.06.2026', amount: 2360 },
+    { id: 9, description: 'Лукойл', category: 'Транспорт', date: '29.06.2026', amount: 1000 },
+    { id: 10, description: 'Летуаль', category: 'Другое', date: '29.06.2026', amount: 4300 },
+    { id: 11, description: 'Яндекс Такси', category: 'Транспорт', date: '28.06.2026', amount: 320 },
+    { id: 12, description: 'Перекресток', category: 'Еда', date: '28.06.2026', amount: 1360 },
+    { id: 13, description: 'Деливери', category: 'Еда', date: '28.06.2026', amount: 2320 },
+    { id: 14, description: 'Вкусвилл', category: 'Еда', date: '27.06.2026', amount: 1220 },
+    { id: 15, description: 'Кофейня №1', category: 'Еда', date: '27.06.2026', amount: 920 },
+    { id: 16, description: 'Вкусвилл', category: 'Еда', date: '26.06.2026', amount: 840 },
+    { id: 17, description: 'Кофейня №1', category: 'Еда', date: '26.06.2026', amount: 920 },
 ]
 
 const isDateInRange = (expenseDate, from, to) => {
-    const expense = new Date(expenseDate)
-    const start = from ? new Date(convertToISO(from)) : new Date()
-    const end = to ? new Date(convertToISO(to)) : new Date()
+    const expense = parseDate(expenseDate)
+    const start = from ? parseDate(from) : new Date()
+    const end = to ? parseDate(to) : new Date()
     end.setHours(23, 59, 59, 999)
     return expense >= start && expense <= end
 }
@@ -58,17 +86,14 @@ export const ExpensesChart = ({ period }) => {
     const maxAmount = Math.max(...Object.values(categoryTotals), 1)
 
     const formatDate = (dateStr) => {
-        const date = new Date(convertToISO(dateStr))
+        const date = parseDate(dateStr)
         const options = { day: 'numeric', month: 'long', year: 'numeric' }
         const formatted = new Intl.DateTimeFormat('ru-RU', options).format(date)
         return formatted.replace(/ г\.$/, '')
     }
 
     const isSameDay = (a, b) => {
-        return (
-            new Date(convertToISO(a)).toDateString() ===
-            new Date(convertToISO(b)).toDateString()
-        )
+        return parseDate(a).toDateString() === parseDate(b).toDateString()
     }
 
     const formatNumber = (num) => {
