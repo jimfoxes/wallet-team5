@@ -1,65 +1,23 @@
 import React, { useState } from 'react'
 import * as S from './Calendar.styled'
 
-// Формат: DD.MM.YYYY
-const formatDate = (day, monthNum, year) => {
-    const dayStr = String(day).padStart(2, '0')
-    const monthStr = String(monthNum).padStart(2, '0')
-    return `${dayStr}.${monthStr}.${year}`
-}
+import {
+  formatDate,
+  getDaysInMonth,
+  getFirstDayOfMonth,
+  generateMonthDays,
+  parseDate,
+  isSameDate,
+  isDateInRange,
+} from '../../utils/dateUtils'
 
-// Получить количество дней в месяце
-const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate()
-}
-
-// Получить день недели для первого числа месяца (1 - понедельник, 7 - воскресенье)
-const getFirstDayOfMonth = (month, year) => {
-    const date = new Date(year, month, 1)
-    return date.getDay() === 0 ? 7 : date.getDay()
-}
-
-// Генерация дней для месяца (только текущий месяц + пустые ячейки)
-const generateMonthDays = (month, year) => {
-    const daysInMonth = getDaysInMonth(month, year)
-    const firstDay = getFirstDayOfMonth(month, year)
-
-    const days = []
-
-    // Пустые ячейки для дней предыдущего месяца
-    const prevMonthDays = firstDay - 1
-    for (let i = 0; i < prevMonthDays; i++) {
-        days.push({
-            number: '',
-            isEmpty: true,
-        })
-    }
-
-    // Дни текущего месяца
-    for (let i = 1; i <= daysInMonth; i++) {
-        days.push({
-            number: i,
-            isEmpty: false,
-        })
-    }
-
-    // Пустые ячейки для дней следующего месяца
-    const totalDays = days.length
-    const remainingCells = (7 - (totalDays % 7)) % 7
-
-    for (let i = 0; i < remainingCells; i++) {
-        days.push({
-            number: '',
-            isEmpty: true,
-        })
-    }
-
-    return days
-}
-
-const Calendar = ({ selectedDate = '16.01.2026', onDateSelect }) => {
-    const [selectedFullDate, setSelectedFullDate] = useState(selectedDate) // ← ХРАНИМ ПОЛНУЮ ДАТУ
-
+const Calendar = ({
+    selectedPeriod = { from: '01.01.2026', to: '16.01.2026' },
+    onPeriodSelect,
+}) => {
+    const [period, setPeriod] = useState(selectedPeriod)
+    const [tempStart, setTempStart] = useState(null)
+    const [tempEnd, setTempEnd] = useState(null)
     const year = 2026
     const monthNames = [
         'Январь',
@@ -84,12 +42,69 @@ const Calendar = ({ selectedDate = '16.01.2026', onDateSelect }) => {
         today.getFullYear()
     )
 
-    const handleDateSelect = (day, monthIndex) => {
-        const formattedDate = formatDate(day, monthIndex + 1, year)
-        setSelectedFullDate(formattedDate) // ← ОБНОВЛЯЕМ ПОЛНУЮ ДАТУ
+    const handleDateClick = (day, monthIndex) => {
+        if (day === '') return
 
-        if (onDateSelect) {
-            onDateSelect(formattedDate)
+        const clickedDate = formatDate(day, monthIndex + 1, year)
+        const parsedDate = parseDate(clickedDate)
+
+        // Если нет начальной даты или уже выбран период - начинаем новый выбор
+        if (!tempStart || (tempStart && tempEnd)) {
+            setTempStart(parsedDate)
+            setTempEnd(null)
+            // Очищаем выбранный период при начале нового выбора
+            setPeriod({ from: '', to: '' })
+            return
+        }
+
+        // Если есть начальная дата - устанавливаем конечную
+        if (tempStart) {
+            // Проверяем, чтобы конечная дата была не раньше начальной
+            const startDateObj = new Date(
+                tempStart.year,
+                tempStart.month - 1,
+                tempStart.day
+            )
+            const clickedDateObj = new Date(
+                parsedDate.year,
+                parsedDate.month - 1,
+                parsedDate.day
+            )
+
+            if (clickedDateObj >= startDateObj) {
+                setTempEnd(parsedDate)
+
+                // На десктопе сразу применяем период
+                const isMobile = window.innerWidth <= 1024
+                if (!isMobile) {
+                    applyPeriod()
+                }
+            } else {
+                // Если кликнули на дату раньше начальной - меняем местами
+                setTempEnd(tempStart)
+                setTempStart(parsedDate)
+            }
+        }
+    }
+
+    const applyPeriod = () => {
+        if (tempStart && tempEnd) {
+            const newPeriod = {
+                from: formatDate(
+                    tempStart.day,
+                    tempStart.month,
+                    tempStart.year
+                ),
+                to: formatDate(tempEnd.day, tempEnd.month, tempEnd.year),
+            }
+
+            setPeriod(newPeriod)
+            setTempStart(null)
+            setTempEnd(null)
+
+            if (onPeriodSelect) {
+                onPeriodSelect(newPeriod)
+            }
         }
     }
 
@@ -126,9 +141,27 @@ const Calendar = ({ selectedDate = '16.01.2026', onDateSelect }) => {
 
                             <S.MonthDaysGrid>
                                 {monthDays.map((day, i) => {
+                                    if (day.isEmpty) {
+                                        return (
+                                            <S.MonthDay
+                                                key={i}
+                                                className="empty"
+                                                style={{ cursor: 'default' }}
+                                            >
+                                                {day.number}
+                                            </S.MonthDay>
+                                        )
+                                    }
+
                                     const dayOfWeek = i % 7
                                     const isWeekend =
                                         dayOfWeek === 5 || dayOfWeek === 6
+
+                                    const currentDate = {
+                                        day: day.number,
+                                        month: monthIndex + 1,
+                                        year: year,
+                                    }
 
                                     const formattedDate = formatDate(
                                         day.number,
@@ -136,32 +169,68 @@ const Calendar = ({ selectedDate = '16.01.2026', onDateSelect }) => {
                                         year
                                     )
 
+                                    // Проверяем текущую дату
                                     const isCurrent =
                                         formattedDate === todayString
-                                    const isSelected =
-                                        formattedDate === selectedFullDate // ← СРАВНИВАЕМ ПОЛНЫЕ ДАТЫ
+
+                                    // Проверяем, находится ли дата в выбранном периоде
+                                    const isInSelectedPeriod =
+                                        period.from &&
+                                        period.to &&
+                                        isDateInRange(
+                                            currentDate,
+                                            parseDate(period.from),
+                                            parseDate(period.to)
+                                        )
+
+                                    // Проверяем, является ли дата началом или концом периода
+                                    const isStartOrEnd =
+                                        period.from &&
+                                        period.to &&
+                                        (isSameDate(
+                                            currentDate,
+                                            parseDate(period.from)
+                                        ) ||
+                                            isSameDate(
+                                                currentDate,
+                                                parseDate(period.to)
+                                            ))
+
+                                    // Проверяем, находится ли дата во временном периоде (при выборе)
+                                    const isInTempPeriod =
+                                        tempStart &&
+                                        tempEnd &&
+                                        isDateInRange(
+                                            currentDate,
+                                            tempStart,
+                                            tempEnd
+                                        )
+
+                                    // Проверяем, является ли дата начальной точкой выбора
+                                    const isTempStart =
+                                        tempStart &&
+                                        isSameDate(currentDate, tempStart)
+                                    const isTempEnd =
+                                        tempEnd &&
+                                        isSameDate(currentDate, tempEnd)
 
                                     return (
                                         <S.MonthDay
                                             key={i}
                                             className={`
-                                                ${day.isEmpty ? 'empty' : ''}
-                                                ${isCurrent ? 'current' : ''}
-                                                ${isWeekend ? 'weekend' : ''}
-                                                ${isSelected ? 'selected' : ''}
-                                            `}
+                        ${isWeekend ? 'weekend' : ''}
+                        ${isCurrent ? 'current' : ''}
+                        ${isInSelectedPeriod ? 'in-period' : ''}
+                        ${isStartOrEnd ? 'period-boundary' : ''}
+                        ${isInTempPeriod ? 'in-temp-period' : ''}
+                        ${isTempStart || isTempEnd ? 'temp-boundary' : ''}
+                      `}
                                             onClick={() =>
-                                                !day.isEmpty &&
-                                                handleDateSelect(
+                                                handleDateClick(
                                                     day.number,
                                                     monthIndex
                                                 )
                                             }
-                                            style={{
-                                                cursor: day.isEmpty
-                                                    ? 'default'
-                                                    : 'pointer',
-                                            }}
                                         >
                                             {day.number}
                                         </S.MonthDay>
@@ -174,7 +243,12 @@ const Calendar = ({ selectedDate = '16.01.2026', onDateSelect }) => {
             </S.CalendarScrollable>
 
             <S.CalendarFooter>
-                <S.CalendarBtn>Выбрать период</S.CalendarBtn>
+                <S.CalendarBtn
+                    onClick={applyPeriod}
+                    disabled={!tempStart || !tempEnd}
+                >
+                    Выбрать период
+                </S.CalendarBtn>
             </S.CalendarFooter>
         </S.CalendarContainer>
     )
