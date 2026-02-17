@@ -13,6 +13,11 @@ const TrashIcon = () => (
 )
 
 const ExpensesTable = ({ expenses, onDeleteExpense }) => {
+    const handleDelete = (id) => {
+        if (onDeleteExpense) {
+            onDeleteExpense(id)
+        }
+    }
 
     return (
         <S.TableContainer>

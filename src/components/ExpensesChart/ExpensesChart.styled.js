@@ -161,7 +161,6 @@ export const BarValueAbove = styled.p`
     }
 `
 export const SelectedPeriodContainer = styled.div`
-    width: 268px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

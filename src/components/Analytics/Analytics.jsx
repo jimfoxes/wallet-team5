@@ -27,7 +27,7 @@ const Analytics = () => {
                 </S.CalendarColumn>
 
                 <S.ContentContainer>
-                    <ExpensesChart />
+                    <ExpensesChart period={period} />
                 </S.ContentContainer>
             </S.ColumnsLayout>
         </S.AnalyticsContainer>
