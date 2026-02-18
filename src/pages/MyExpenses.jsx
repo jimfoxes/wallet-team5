@@ -24,19 +24,21 @@ const categories = [
 ]
 
 const isValidDate = (value) => {
-    const regex = /^(\d{2})\.(\d{2})\.(\d{4})$/
+    const regex = /^(\d{2})\.(\d{2})\.(\d{2}|\d{4})$/
     if (!regex.test(value)) return false
 
-    const [day, month, year] = value.split('.').map(Number)
+    let [day, month, year] = value.split('.').map(Number)
+
+    if (year < 100) {
+        year += 2000
+    }
 
     if (month < 1 || month > 12) return false
     if (day < 1 || day > 31) return false
-    if (year < 2000 || year > 2100) return false
 
     const date = new Date(year, month - 1, day)
-    if (date.getDate() !== day || date.getMonth() !== month - 1) return false
 
-    return true
+    return date.getDate() === day && date.getMonth() === month - 1
 }
 
 const MyExpenses = ({ onAddExpense }) => {
@@ -52,12 +54,33 @@ const MyExpenses = ({ onAddExpense }) => {
     const validCategory = category !== ''
     const allValid = validDesc && validDate && validAmount && validCategory
 
+    const handleDateChange = (e) => {
+        let value = e.target.value.replace(/\D/g, '')
+
+        if (value.length > 8) {
+            value = value.slice(0, 8)
+        }
+
+        if (value.length >= 5) {
+            value = `${value.slice(0, 2)}.${value.slice(2, 4)}.${value.slice(4)}`
+        } else if (value.length >= 3) {
+            value = `${value.slice(0, 2)}.${value.slice(2)}`
+        }
+
+        setDate(value)
+    }
+
     const handleSubmit = () => {
         setSubmitted(true)
 
         if (allValid) {
-            // преобразуем дату из ДД.ММ.ГГГГ в М-Д-ГГГГ
-            const [day, month, year] = date.split('.')
+            const [day, month, yearInput] = date.split('.')
+
+            let year = Number(yearInput)
+            if (year < 100) {
+                year += 2000
+            }
+
             const formattedDate = `${Number(month)}-${Number(day)}-${year}`
 
             const expenseData = {
@@ -126,7 +149,7 @@ const MyExpenses = ({ onAddExpense }) => {
             <Input
                 placeholder="Введите дату"
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={handleDateChange}
                 className={submitted ? (validDate ? 'valid' : 'error') : ''}
             />
 
