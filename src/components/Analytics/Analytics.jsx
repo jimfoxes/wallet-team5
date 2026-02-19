@@ -11,7 +11,6 @@ const Analytics = () => {
 
     const handlePeriodSelect = (newPeriod) => {
         setPeriod(newPeriod)
-        console.log('Выбранный период:', newPeriod)
     }
 
     return (

@@ -1,30 +1,40 @@
 import * as S from './ExpensesChart.styled'
 import { useNavigate } from 'react-router-dom'
-
-// Конвертируем DD.MM.YYYY → YYYY-MM-DD
-const convertToISO = (dateStr) => {
-    if (!dateStr) return null
-    const [day, month, year] = dateStr.split('.')
-    return `${year}-${month}-${day}`
-}
+import { useEffect, useState } from 'react'
+import { fetchTransactions } from '../../services/api'
 
 const parseDate = (dateStr) => {
     if (!dateStr) return null
 
-    // Если формат DD.MM.YYYY
     if (dateStr.includes('.')) {
         const [day, month, year] = dateStr.split('.')
         return new Date(+year, +month - 1, +day)
     }
 
-    // Если формат YYYY-MM-DD
     if (dateStr.includes('-')) {
         const [year, month, day] = dateStr.split('-')
         return new Date(+year, +month - 1, +day)
     }
 
-    // На всякий случай — fallback
     return new Date(dateStr)
+}
+
+// Словарь: API категории → Русские названия
+const apiToCategory = {
+    food: 'Еда',
+    transport: 'Транспорт',
+    housing: 'Жилье',
+    joy: 'Развлечения',
+    education: 'Образование',
+    others: 'Другое',
+}
+
+const formatDateFromISO = (isoString) => {
+    const date = new Date(isoString)
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${day}.${month}.${year}`
 }
 
 const categoryColors = {
@@ -35,26 +45,6 @@ const categoryColors = {
     Образование: 'rgba(188, 236, 48, 1);',
     Другое: 'rgba(255, 185, 184, 1);',
 }
-
-const mockExpenses = [
-    { id: 1, description: 'Пятерочка', category: 'Еда', date: '03.07.2026', amount: 3500 },
-    { id: 2, description: 'Яндекс Такси', category: 'Транспорт', date: '03.07.2026', amount: 730 },
-    { id: 3, description: 'Аптека Вита', category: 'Другое', date: '03.07.2026', amount: 1200 },
-    { id: 4, description: 'Бургер Кинг', category: 'Еда', date: '03.07.2026', amount: 950 },
-    { id: 5, description: 'Деливери', category: 'Еда', date: '02.07.2026', amount: 1320 },
-    { id: 6, description: 'Кофейня №1', category: 'Еда', date: '02.07.2026', amount: 400 },
-    { id: 7, description: 'Бильярд', category: 'Развлечения', date: '29.06.2026', amount: 600 },
-    { id: 8, description: 'Перекресток', category: 'Еда', date: '29.06.2026', amount: 2360 },
-    { id: 9, description: 'Лукойл', category: 'Транспорт', date: '29.06.2026', amount: 1000 },
-    { id: 10, description: 'Летуаль', category: 'Другое', date: '29.06.2026', amount: 4300 },
-    { id: 11, description: 'Яндекс Такси', category: 'Транспорт', date: '28.06.2026', amount: 320 },
-    { id: 12, description: 'Перекресток', category: 'Еда', date: '28.06.2026', amount: 1360 },
-    { id: 13, description: 'Деливери', category: 'Еда', date: '28.06.2026', amount: 2320 },
-    { id: 14, description: 'Вкусвилл', category: 'Еда', date: '27.06.2026', amount: 1220 },
-    { id: 15, description: 'Кофейня №1', category: 'Еда', date: '27.06.2026', amount: 920 },
-    { id: 16, description: 'Вкусвилл', category: 'Еда', date: '26.06.2026', amount: 840 },
-    { id: 17, description: 'Кофейня №1', category: 'Еда', date: '26.06.2026', amount: 920 },
-]
 
 const isDateInRange = (expenseDate, from, to) => {
     const expense = parseDate(expenseDate)
@@ -68,7 +58,45 @@ export const ExpensesChart = ({ period }) => {
     const { from, to } = period || {}
     const navigate = useNavigate()
 
-    const filteredExpenses = mockExpenses.filter((expense) =>
+    const [expenses, setExpenses] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+
+    useEffect(() => {
+        const token = localStorage.getItem('authToken')
+        if (!token) {
+            setError('Токен не найден')
+            setLoading(false)
+            return
+        }
+
+        const loadExpenses = async () => {
+            try {
+                setLoading(true)
+                setError('')
+
+                const data = await fetchTransactions({ token })
+
+                const formattedExpenses = data.map((item) => ({
+                    id: item._id,
+                    description: item.description,
+                    category: apiToCategory[item.category] || item.category,
+                    date: formatDateFromISO(item.date),
+                    amount: Number(item.sum),
+                }))
+
+                setExpenses(formattedExpenses)
+            } catch (err) {
+                setError(err.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        loadExpenses()
+    }, [])
+
+    const filteredExpenses = expenses.filter((expense) =>
         isDateInRange(expense.date, from, to)
     )
 
@@ -102,6 +130,14 @@ export const ExpensesChart = ({ period }) => {
 
     const handleCalendarClick = () => {
         navigate('/analytics')
+    }
+
+    if (loading) {
+        return <S.ChartContainer>Загрузка данных...</S.ChartContainer>
+    }
+
+    if (error) {
+        return <S.ChartContainer>Ошибка: {error}</S.ChartContainer>
     }
 
     return (
