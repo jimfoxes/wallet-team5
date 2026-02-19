@@ -9,8 +9,11 @@ export const AnalyticsContainer = styled.div`
     box-sizing: border-box;
 
     @media (max-width: 430px) {
+        padding-bottom: 0px;
+        height: 700px;
         padding-left: 16px;
         padding-right: 16px;
+        background-color: rgba(255, 255, 255, 1);
     }
 `
 
@@ -23,10 +26,6 @@ export const AnalyticsTitle = styled.h1`
     line-height: 150%;
     letter-spacing: 0px;
     text-align: left;
-
-    @media (max-width: 1024px) {
-        text-align: center;
-    }
 
     @media (max-width: 768px) {
         font-size: 24px;
@@ -43,6 +42,7 @@ export const ColumnsLayout = styled.div`
     @media (max-width: 768px) {
         flex-direction: column;
         align-items: stretch;
+        margin-top: 24px;
     }
 `
 
@@ -74,7 +74,6 @@ export const CalendarColumn = styled.div`
 
 // --- Контейнер для диаграммы ---
 export const ContentContainer = styled.div`
-    height: 540px;
     flex-grow: 1;
 
     @media (max-width: 768px) {

@@ -314,7 +314,6 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 })}
             </S.CalendarScrollable>
 
-            {/* Футер с кнопкой — только на мобильных */}
             <S.CalendarFooter>
                 <S.CalendarBtn
                     onClick={handleApplyPeriod}
