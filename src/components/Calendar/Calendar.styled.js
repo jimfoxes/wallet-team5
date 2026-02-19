@@ -240,15 +240,16 @@ export const MonthDay = styled.div`
         font-weight: 600;
     }
 `
-
 export const CalendarFooter = styled.div`
     display: none;
 
     @media (max-width: 768px) {
         display: flex;
-        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
         height: 87px;
-        opacity: 1;
         background: rgba(255, 255, 255, 1);
         box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
         padding: 0 16px;

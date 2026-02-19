@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as S from './Calendar.styled'
 
 import {
@@ -14,6 +14,11 @@ import {
 const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
     const [tempStart, setTempStart] = useState(null)
     const [tempEnd, setTempEnd] = useState(null)
+    const [isMobile, setIsMobile] = useState(false)
+
+    // Внутреннее состояние для отображения текущего периода
+    const [currentPeriod, setCurrentPeriod] = useState({ from: null, to: null })
+
     const year = 2026
     const monthNames = [
         'Январь',
@@ -30,6 +35,22 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         'Декабрь',
     ]
 
+    // Синхронизируем currentPeriod с внешним selectedPeriod при изменении
+    useEffect(() => {
+        if (selectedPeriod?.from && selectedPeriod?.to) {
+            setCurrentPeriod(selectedPeriod)
+        }
+    }, [selectedPeriod])
+
+    // Определяем, мобильное ли устройство
+    useEffect(() => {
+        const checkMobile = () => window.innerWidth <= 768
+        setIsMobile(checkMobile())
+        const handleResize = () => setIsMobile(window.innerWidth <= 768)
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     // Сегодняшняя дата
     const today = new Date()
     const todayString = formatDate(
@@ -38,30 +59,58 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         today.getFullYear()
     )
 
+    // --- Вспомогательные функции для подсветки ---
+    const isDateSelected = (
+        day,
+        monthIndex,
+        year,
+        selectedFrom,
+        selectedTo
+    ) => {
+        if (!selectedFrom || !selectedTo) return false
+        const from = parseDate(selectedFrom)
+        const to = parseDate(selectedTo)
+        const current = { day, month: monthIndex + 1, year }
+        return isDateInRange(current, from, to)
+    }
+
+    const isSelectedStart = (day, monthIndex, year, selectedFrom) => {
+        if (!selectedFrom) return false
+        const from = parseDate(selectedFrom)
+        return (
+            from.day === day &&
+            from.month === monthIndex + 1 &&
+            from.year === year
+        )
+    }
+
+    const isSelectedEnd = (day, monthIndex, year, selectedTo) => {
+        if (!selectedTo) return false
+        const to = parseDate(selectedTo)
+        return to.day === day && to.month === monthIndex + 1 && to.year === year
+    }
+
     const handleDateClick = (day, monthIndex) => {
         if (day === '') return
 
         const clickedDate = formatDate(day, monthIndex + 1, year)
         const parsedDate = parseDate(clickedDate)
 
-        // Если уже выбран полный период (внешний from и to), начинаем заново
-        if (from && to && !tempStart && !tempEnd) {
+        // Если уже есть полный период — начинаем новый выбор → сбрасываем временные данные
+        if (currentPeriod.from && currentPeriod.to && !tempStart && !tempEnd) {
             setTempStart(parsedDate)
             setTempEnd(null)
-            // Сбрасываем внешний период через колбэк
-            if (onPeriodSelect) {
-                onPeriodSelect({ from: '', to: '' })
-            }
             return
         }
 
         // Если нет начальной даты — устанавливаем её
         if (!tempStart) {
             setTempStart(parsedDate)
+            setTempEnd(null)
             return
         }
 
-        // Если есть начальная, но нет конечной — устанавливаем конец
+        // Есть начальная, но нет конечной
         if (tempStart && !tempEnd) {
             const startDateObj = new Date(
                 tempStart.year,
@@ -74,57 +123,56 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 parsedDate.day
             )
 
-            if (clickedDateObj >= startDateObj) {
-                // Обычный порядок
-                setTempEnd(parsedDate)
-                applyPeriod(parsedDate)
-            } else {
-                // Обратный порядок: clicked < tempStart
-                // from = clicked, to = tempStart
+            let newStart = tempStart
+            let newEnd = parsedDate
+
+            if (clickedDateObj < startDateObj) {
+                newStart = parsedDate
+                newEnd = tempStart
+            }
+
+            setTempStart(newStart)
+            setTempEnd(newEnd)
+
+            // --- Автоматически применяем на десктопе ---
+            if (!isMobile) {
                 const newPeriod = {
                     from: formatDate(
-                        parsedDate.day,
-                        parsedDate.month,
-                        parsedDate.year
+                        newStart.day,
+                        newStart.month,
+                        newStart.year
                     ),
-                    to: formatDate(
-                        tempStart.day,
-                        tempStart.month,
-                        tempStart.year
-                    ),
+                    to: formatDate(newEnd.day, newEnd.month, newEnd.year),
                 }
-
+                onPeriodSelect(newPeriod)
+                setCurrentPeriod(newPeriod) // Сохраняем как текущий
                 setTempStart(null)
                 setTempEnd(null)
-
-                if (onPeriodSelect) {
-                    onPeriodSelect(newPeriod)
-                }
             }
         }
     }
 
-    const applyPeriod = (end = tempEnd) => {
-        if (tempStart && end) {
-            const newPeriod = {
-                from: formatDate(
-                    tempStart.day,
-                    tempStart.month,
-                    tempStart.year
-                ),
-                to: formatDate(end.day, end.month, end.year),
-            }
+    // --- Кнопка "Выбрать период" (только для мобильных) ---
+    const handleApplyPeriod = () => {
+        if (!tempStart || !tempEnd) return
 
-            setTempStart(null)
-            setTempEnd(null)
-
-            if (onPeriodSelect) {
-                onPeriodSelect(newPeriod)
-            }
+        const newPeriod = {
+            from: formatDate(tempStart.day, tempStart.month, tempStart.year),
+            to: formatDate(tempEnd.day, tempEnd.month, tempEnd.year),
         }
+
+        onPeriodSelect(newPeriod)
+        setCurrentPeriod(newPeriod) // Устанавливаем как текущий
+        setTempStart(null)
+        setTempEnd(null)
     }
 
-    const { from, to } = selectedPeriod || {}
+    // Показываем старый выбранный период ТОЛЬКО если нет активного временного выбора
+    const showCurrentPeriod =
+        currentPeriod.from && currentPeriod.to && !tempStart && !tempEnd
+    const { from, to } = showCurrentPeriod
+        ? currentPeriod
+        : { from: null, to: null }
 
     return (
         <S.CalendarContainer>
@@ -185,34 +233,35 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                                         monthIndex + 1,
                                         year
                                     )
-
                                     const isCurrent =
                                         formattedDate === todayString
 
-                                    const isInSelectedPeriod =
-                                        from &&
-                                        to &&
-                                        isDateInRange(
-                                            currentDate,
-                                            parseDate(from),
-                                            parseDate(to)
-                                        )
+                                    // Подсвечиваем только если в currentPeriod
+                                    const isInSelectedPeriod = isDateSelected(
+                                        day.number,
+                                        monthIndex,
+                                        year,
+                                        from,
+                                        to
+                                    )
+                                    const isSelectedStartFlag = isSelectedStart(
+                                        day.number,
+                                        monthIndex,
+                                        year,
+                                        from
+                                    )
+                                    const isSelectedEndFlag = isSelectedEnd(
+                                        day.number,
+                                        monthIndex,
+                                        year,
+                                        to
+                                    )
 
-                                    const isStartOrEnd =
-                                        from &&
-                                        to &&
-                                        (isSameDate(
-                                            currentDate,
-                                            parseDate(from)
-                                        ) ||
-                                            isSameDate(
-                                                currentDate,
-                                                parseDate(to)
-                                            ))
-
+                                    // Временный выбор (в процессе)
                                     const isInTempPeriod =
                                         tempStart &&
                                         tempEnd &&
+                                        !isInSelectedPeriod &&
                                         isDateInRange(
                                             currentDate,
                                             tempStart,
@@ -221,10 +270,19 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
 
                                     const isTempStart =
                                         tempStart &&
-                                        isSameDate(currentDate, tempStart)
+                                        isSameDate(currentDate, tempStart) &&
+                                        !(
+                                            isSelectedStartFlag &&
+                                            isInSelectedPeriod
+                                        )
+
                                     const isTempEnd =
                                         tempEnd &&
-                                        isSameDate(currentDate, tempEnd)
+                                        isSameDate(currentDate, tempEnd) &&
+                                        !(
+                                            isSelectedEndFlag &&
+                                            isInSelectedPeriod
+                                        )
 
                                     return (
                                         <S.MonthDay
@@ -233,10 +291,12 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                                                 ${isWeekend ? 'weekend' : ''}
                                                 ${isCurrent ? 'current' : ''}
                                                 ${isInSelectedPeriod ? 'in-period' : ''}
-                                                ${isStartOrEnd ? 'period-boundary' : ''}
+                                                ${isSelectedStartFlag ? 'period-boundary' : ''}
+                                                ${isSelectedEndFlag ? 'period-boundary' : ''}
                                                 ${isInTempPeriod ? 'in-temp-period' : ''}
-                                                ${isTempStart || isTempEnd ? 'temp-boundary' : ''}
-                                            `}
+                                                ${isTempStart ? 'temp-boundary' : ''}
+                                                ${isTempEnd ? 'temp-boundary' : ''}
+                                            `.trim()}
                                             onClick={() =>
                                                 handleDateClick(
                                                     day.number,
@@ -254,9 +314,10 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 })}
             </S.CalendarScrollable>
 
+            {/* Футер с кнопкой — только на мобильных */}
             <S.CalendarFooter>
                 <S.CalendarBtn
-                    onClick={() => applyPeriod()}
+                    onClick={handleApplyPeriod}
                     disabled={!tempStart || !tempEnd}
                 >
                     Выбрать период
