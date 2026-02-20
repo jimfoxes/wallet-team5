@@ -8,6 +8,10 @@ export const CalendarContainer = styled.div`
     display: flex;
     flex-direction: column;
 
+    @media (max-width: 1024px) {
+        width: 375px;
+    }
+
     @media (max-width: 768px) {
         width: 375px;
     }
@@ -23,7 +27,7 @@ export const CalendarHeader = styled.div`
     z-index: 10;
     flex-shrink: 0;
 
-    @media screen and (max-width: 768px) {
+    @media (max-width: 768px) {
         height: 127px;
         padding: 24px 16px 0 16px;
     }
@@ -252,8 +256,8 @@ export const CalendarFooter = styled.div`
         height: 87px;
         background: rgba(255, 255, 255, 1);
         box-shadow: 0px -20px 67px -12px rgba(0, 0, 0, 0.13);
-        padding: 0 16px;
         align-items: center;
+        justify-content: center;
     }
 `
 
@@ -261,7 +265,7 @@ export const CalendarBtn = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 343px;
     height: 39px;
     font-family: Montserrat;
     font-weight: 600;

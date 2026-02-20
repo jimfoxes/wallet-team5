@@ -19,9 +19,17 @@ const Analytics = () => {
         setView('calendar')
     }
 
+    // возврат к диаграмме без изменения периода
+    const handleBackToChart = () => {
+        setView('chart');
+    };
+
     return (
-        <S.AnalyticsContainer>
-            <S.AnalyticsTitle>Анализ расходов</S.AnalyticsTitle>
+        <S.AnalyticsContainer $isCalendarView={view === 'calendar'} $isChartView={view === 'chart'}>
+    
+            {view === 'chart' && (
+                <S.AnalyticsTitle>Анализ расходов</S.AnalyticsTitle> // Показываем заголовок ТОЛЬКО когда view === 'chart'
+            )}
 
             <S.ColumnsLayout>
                 <S.CalendarColumn
@@ -31,6 +39,7 @@ const Analytics = () => {
                     <Calendar
                         selectedPeriod={period}
                         onPeriodSelect={handlePeriodSelect}
+                        onBack={handleBackToChart}
                     />
                 </S.CalendarColumn>
                 <S.ContentContainer $show={view === 'chart'}>

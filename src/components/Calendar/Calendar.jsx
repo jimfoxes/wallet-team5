@@ -11,7 +11,7 @@ import {
     isDateInRange,
 } from '../../utils/dateUtils'
 
-const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
+const Calendar = ({ selectedPeriod, onPeriodSelect, onBack }) => {
     const [tempStart, setTempStart] = useState(null)
     const [tempEnd, setTempEnd] = useState(null)
     const [isMobile, setIsMobile] = useState(false)
@@ -59,7 +59,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         today.getFullYear()
     )
 
-    // --- Вспомогательные функции для подсветки ---
+    // Вспомогательные функции для подсветки
     const isDateSelected = (
         day,
         monthIndex,
@@ -134,7 +134,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
             setTempStart(newStart)
             setTempEnd(newEnd)
 
-            // --- Автоматически применяем на десктопе ---
+            // Автоматически применяем на десктопе
             if (!isMobile) {
                 const newPeriod = {
                     from: formatDate(
@@ -152,7 +152,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         }
     }
 
-    // --- Кнопка "Выбрать период" (только для мобильных) ---
+    // Кнопка "Выбрать период" (только для мобильных)
     const handleApplyPeriod = () => {
         if (!tempStart || !tempEnd) return
 
@@ -180,7 +180,13 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 <S.CalendarTitle>Период</S.CalendarTitle>
 
                 <S.CalendarTitleMobile>
-                    <S.Link href="/">
+                    <S.Link
+                        href="/"
+                        onClick={(e) => {
+                            e.preventDefault() // ← Отменяем переход по ссылке
+                            onBack?.() // ← Вызываем callback из Analytics
+                        }}
+                    >
                         <S.LinkIconMob>➜</S.LinkIconMob>
                         <S.LinkTitleMob>Анализ расходов</S.LinkTitleMob>
                     </S.Link>

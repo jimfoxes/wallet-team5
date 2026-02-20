@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 
 export const AnalyticsContainer = styled.div`
+    display: flex;    
+    flex-direction: column;
     padding-right: calc(50% - 600px);
     padding-left: calc(50% - 600px);
     padding-top: 100px;
@@ -8,12 +10,13 @@ export const AnalyticsContainer = styled.div`
     background-color: rgba(244, 245, 246, 1);
     box-sizing: border-box;
 
+    @media (max-width: 768px) {
+        padding-top: ${(props) => props.$isCalendarView ? '32px' : '100px'};
+    }    
+
     @media (max-width: 430px) {
-        padding-bottom: 0px;
-        height: 700px;
-        padding-left: 16px;
-        padding-right: 16px;
-        background-color: rgba(255, 255, 255, 1);
+        padding-top: ${(props) => props.$isCalendarView ? '32px' : '32px'};
+        padding-top: ${(props) => props.$isChartView ? '88px' : '100px'};
     }
 `
 
@@ -27,7 +30,7 @@ export const AnalyticsTitle = styled.h1`
     letter-spacing: 0px;
     text-align: left;
 
-    @media (max-width: 768px) {
+    @media (max-width: 430px) {
         font-size: 24px;
         line-height: 100%;
         letter-spacing: 0px;
@@ -39,9 +42,12 @@ export const ColumnsLayout = styled.div`
     gap: 32px;
     margin-top: 32px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    @media (max-width: 430px) {
         margin-top: 24px;
     }
 `
@@ -49,7 +55,9 @@ export const ColumnsLayout = styled.div`
 // --- Календарь — на десктопе всегда виден, на мобильных — только при нужном view ---
 export const CalendarColumn = styled.div`
     display: ${(props) =>
-        props.$visibleOnDesktop ? 'flex' : props.$isVisible ? 'flex' : 'none'};
+        props.$visibleOnDesktop ? 'flex' : props.$isVisible ? 'flex' : 'none'
+    };
+    
     flex-direction: column;
     width: 379px;
     height: 540px;
@@ -59,12 +67,17 @@ export const CalendarColumn = styled.div`
     background: rgba(255, 255, 255, 1);
     padding-bottom: 24px;
 
+    @media (max-width: 1024px) {
+        width: 100%;
+        align-items: center;
+    }
+
     @media (max-width: 768px) {
         width: 100%;
-        max-width: 379px;
         border-radius: 0;
         box-shadow: none;
         justify-content: center;
+        align-items: center;
         height: auto;
         min-height: 100vh;
         padding-bottom: 87px;
