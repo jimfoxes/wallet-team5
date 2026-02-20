@@ -1,22 +1,47 @@
 import styled from 'styled-components'
 
+const COLORS = {
+    bgGray: 'rgba(244, 245, 246, 1)',
+    white: 'rgba(255, 255, 255, 1)',
+    black: 'rgba(0, 0, 0, 1)',
+    primary: 'rgba(115, 52, 234, 1)',
+    primaryDark: 'rgb(81, 0, 231)',
+}
+
 export const AnalyticsContainer = styled.div`
-    display: flex;    
+    display: flex;
     flex-direction: column;
     padding-right: calc(50% - 600px);
     padding-left: calc(50% - 600px);
     padding-top: 100px;
     padding-bottom: 80px;
-    background-color: rgba(244, 245, 246, 1);
+    background-color: ${COLORS.bgGray};
     box-sizing: border-box;
 
     @media (max-width: 768px) {
-        padding-top: ${(props) => props.$isCalendarView ? '32px' : '100px'};
-    }    
+        padding-top: ${(props) => {
+            switch (props.$isCalendarView) {
+                case 'calendar':
+                    return '32px'
+                case 'chart':
+                    return '100px'
+                default:
+                    return '100px'
+            }
+        }};
+    }
 
     @media (max-width: 430px) {
-        padding-top: ${(props) => props.$isCalendarView ? '32px' : '32px'};
-        padding-top: ${(props) => props.$isChartView ? '88px' : '100px'};
+        padding-top: ${(props) => {
+            switch (props.$isCalendarView) {
+                case 'calendar':
+                    return '40px'
+                case 'chart':
+                    return '88px'
+                default:
+                    return '100px'
+            }
+        }};
     }
 `
 
@@ -25,7 +50,7 @@ export const AnalyticsTitle = styled.h1`
     font-weight: 700;
     font-style: Bold;
     font-size: 32px;
-    color: rgba(0, 0, 0, 1);
+    color: ${COLORS.black};
     line-height: 150%;
     letter-spacing: 0px;
     text-align: left;
@@ -55,16 +80,15 @@ export const ColumnsLayout = styled.div`
 // --- Календарь — на десктопе всегда виден, на мобильных — только при нужном view ---
 export const CalendarColumn = styled.div`
     display: ${(props) =>
-        props.$visibleOnDesktop ? 'flex' : props.$isVisible ? 'flex' : 'none'
-    };
-    
+        props.$visibleOnDesktop ? 'flex' : props.$isVisible ? 'flex' : 'none'};
+
     flex-direction: column;
     width: 379px;
     height: 540px;
     overflow: hidden;
     border-radius: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 1);
+    background: ${COLORS.white};
     padding-bottom: 24px;
 
     @media (max-width: 1024px) {
@@ -99,6 +123,39 @@ export const ContentContainer = styled.div`
     }
 `
 
+// --- Контейнер с Кнопкой "Выбрать другой период" ---
+export const CalendarButton = styled.button`
+    display: none;
+
+    @media (max-width: 768px) {
+        display: block;
+        width: 343px;
+        height: 39px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        background: ${COLORS.primary};
+        gap: 12px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: ${COLORS.white};
+        font-family: Montserrat;
+        font-style: SemiBold;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 15px;
+        letter-spacing: 0px;
+        text-align: center;
+
+        &:active {
+            background: ${COLORS.primaryDark};
+        }
+    }
+`
+
 // --- Кнопка "Выбрать другой период" ---
 export const CalendarButtonContainer = styled.div`
     display: none;
@@ -117,37 +174,5 @@ export const CalendarButtonContainer = styled.div`
         z-index: 1000;
         padding: 0;
         margin: 0;
-    }
-`
-
-export const CalendarButton = styled.button`
-    display: none;
-
-    @media (max-width: 768px) {
-        display: block;
-        width: 343px;
-        height: 39px;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        border-radius: 6px;
-        background: rgba(115, 52, 234, 1);
-        gap: 12px;
-        padding: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        color: rgba(255, 255, 255, 1);
-        font-family: Montserrat;
-        font-style: SemiBold;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 15px;
-        letter-spacing: 0px;
-        text-align: center;
-
-        &:active {
-            background: rgb(81, 0, 231);
-        }
     }
 `

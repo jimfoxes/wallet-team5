@@ -8,25 +8,26 @@ const Analytics = () => {
         from: '01.01.2026',
         to: '16.01.2026',
     })
-    const [view, setView] = useState('chart') // 'chart' или 'calendar'
+    
+    const [view, setView] = useState('chart')
+
+    // Вынесена повторяющаяся логика в одну функцию (DRY)
+    const showChart = () => setView('chart')
 
     const handlePeriodSelect = (newPeriod) => {
         setPeriod(newPeriod)
-        setView('chart')
+        showChart() // Используем общую функцию
     }
 
     const handleOpenCalendar = () => {
         setView('calendar')
     }
 
-    // возврат к диаграмме без изменения периода
-    const handleBackToChart = () => {
-        setView('chart');
-    };
+    // Переиспользуем ту же функцию (вместо создания новой)
+    const handleBackToChart = showChart
 
     return (
-        <S.AnalyticsContainer $isCalendarView={view === 'calendar'} $isChartView={view === 'chart'}>
-    
+        <S.AnalyticsContainer $isCalendarView={view}>
             {view === 'chart' && (
                 <S.AnalyticsTitle>Анализ расходов</S.AnalyticsTitle> // Показываем заголовок ТОЛЬКО когда view === 'chart'
             )}
