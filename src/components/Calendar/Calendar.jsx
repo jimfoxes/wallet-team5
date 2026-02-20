@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import * as S from './Calendar.styled'
-
 import {
     formatDate,
-    getDaysInMonth,
-    getFirstDayOfMonth,
     generateMonthDays,
     parseDate,
     isSameDate,
     isDateInRange,
 } from '../../utils/dateUtils'
+import { getDateClasses } from '../../utils/calendarClasses'
 
-const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
+const Calendar = ({ selectedPeriod, onPeriodSelect, onBack }) => {
     const [tempStart, setTempStart] = useState(null)
     const [tempEnd, setTempEnd] = useState(null)
-    const [isMobile, setIsMobile] = useState(false)
-
-    // Внутреннее состояние для отображения текущего периода
-    const [currentPeriod, setCurrentPeriod] = useState({ from: null, to: null })
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768)
 
     const year = 2026
     const monthNames = [
@@ -35,23 +30,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         'Декабрь',
     ]
 
-    // Синхронизируем currentPeriod с внешним selectedPeriod при изменении
-    useEffect(() => {
-        if (selectedPeriod?.from && selectedPeriod?.to) {
-            setCurrentPeriod(selectedPeriod)
-        }
-    }, [selectedPeriod])
-
-    // Определяем, мобильное ли устройство
-    useEffect(() => {
-        const checkMobile = () => window.innerWidth <= 768
-        setIsMobile(checkMobile())
-        const handleResize = () => setIsMobile(window.innerWidth <= 768)
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    // Сегодняшняя дата
+    // Сегодняшняя дата для подсветки
     const today = new Date()
     const todayString = formatDate(
         today.getDate(),
@@ -59,58 +38,35 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
         today.getFullYear()
     )
 
-    // --- Вспомогательные функции для подсветки ---
-    const isDateSelected = (
-        day,
-        monthIndex,
-        year,
-        selectedFrom,
-        selectedTo
-    ) => {
-        if (!selectedFrom || !selectedTo) return false
-        const from = parseDate(selectedFrom)
-        const to = parseDate(selectedTo)
-        const current = { day, month: monthIndex + 1, year }
-        return isDateInRange(current, from, to)
-    }
+    // Получаем отображаемый период: selectedPeriod, если нет временного выбора
+    const hasSelectedPeriod = selectedPeriod?.from && selectedPeriod?.to
+    const { from, to } =
+        hasSelectedPeriod && !tempStart && !tempEnd
+            ? selectedPeriod
+            : { from: null, to: null }
 
-    const isSelectedStart = (day, monthIndex, year, selectedFrom) => {
-        if (!selectedFrom) return false
-        const from = parseDate(selectedFrom)
-        return (
-            from.day === day &&
-            from.month === monthIndex + 1 &&
-            from.year === year
-        )
-    }
-
-    const isSelectedEnd = (day, monthIndex, year, selectedTo) => {
-        if (!selectedTo) return false
-        const to = parseDate(selectedTo)
-        return to.day === day && to.month === monthIndex + 1 && to.year === year
-    }
-
+    // Обработчик клика по дате
     const handleDateClick = (day, monthIndex) => {
         if (day === '') return
 
         const clickedDate = formatDate(day, monthIndex + 1, year)
         const parsedDate = parseDate(clickedDate)
 
-        // Если уже есть полный период — начинаем новый выбор → сбрасываем временные данные
-        if (currentPeriod.from && currentPeriod.to && !tempStart && !tempEnd) {
+        // Начинаем новый выбор, если уже есть полный период
+        if (hasSelectedPeriod && !tempStart && !tempEnd) {
             setTempStart(parsedDate)
             setTempEnd(null)
             return
         }
 
-        // Если нет начальной даты — устанавливаем её
+        // Устанавливаем начало периода
         if (!tempStart) {
             setTempStart(parsedDate)
             setTempEnd(null)
             return
         }
 
-        // Есть начальная, но нет конечной
+        // Устанавливаем конец периода
         if (tempStart && !tempEnd) {
             const startDateObj = new Date(
                 tempStart.year,
@@ -123,18 +79,15 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 parsedDate.day
             )
 
-            let newStart = tempStart
-            let newEnd = parsedDate
-
-            if (clickedDateObj < startDateObj) {
-                newStart = parsedDate
-                newEnd = tempStart
-            }
+            const newStart =
+                clickedDateObj < startDateObj ? parsedDate : tempStart
+            const newEnd =
+                clickedDateObj < startDateObj ? tempStart : parsedDate
 
             setTempStart(newStart)
             setTempEnd(newEnd)
 
-            // --- Автоматически применяем на десктопе ---
+            // Авто-применение на десктопе
             if (!isMobile) {
                 const newPeriod = {
                     from: formatDate(
@@ -145,14 +98,13 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                     to: formatDate(newEnd.day, newEnd.month, newEnd.year),
                 }
                 onPeriodSelect(newPeriod)
-                setCurrentPeriod(newPeriod) // Сохраняем как текущий
                 setTempStart(null)
                 setTempEnd(null)
             }
         }
     }
 
-    // --- Кнопка "Выбрать период" (только для мобильных) ---
+    // Кнопка "Выбрать период" для мобильных
     const handleApplyPeriod = () => {
         if (!tempStart || !tempEnd) return
 
@@ -160,33 +112,32 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
             from: formatDate(tempStart.day, tempStart.month, tempStart.year),
             to: formatDate(tempEnd.day, tempEnd.month, tempEnd.year),
         }
-
         onPeriodSelect(newPeriod)
-        setCurrentPeriod(newPeriod) // Устанавливаем как текущий
         setTempStart(null)
         setTempEnd(null)
     }
-
-    // Показываем старый выбранный период ТОЛЬКО если нет активного временного выбора
-    const showCurrentPeriod =
-        currentPeriod.from && currentPeriod.to && !tempStart && !tempEnd
-    const { from, to } = showCurrentPeriod
-        ? currentPeriod
-        : { from: null, to: null }
 
     return (
         <S.CalendarContainer>
             <S.CalendarHeader>
                 <S.CalendarTitle>Период</S.CalendarTitle>
 
+                {/* Мобильный хедер с кнопкой "назад" */}
                 <S.CalendarTitleMobile>
-                    <S.Link href="/">
+                    <S.Link
+                        href="/"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            onBack?.()
+                        }}
+                    >
                         <S.LinkIconMob>➜</S.LinkIconMob>
                         <S.LinkTitleMob>Анализ расходов</S.LinkTitleMob>
                     </S.Link>
                     <S.CalendarTitleMob>Выбор периода</S.CalendarTitleMob>
                 </S.CalendarTitleMobile>
 
+                {/* Дни недели */}
                 <S.WeekdaysContainer>
                     {['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].map((day) => (
                         <S.Weekday key={day}>{day}</S.Weekday>
@@ -194,6 +145,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 </S.WeekdaysContainer>
             </S.CalendarHeader>
 
+            {/* Скроллируемая сетка месяцев */}
             <S.CalendarScrollable>
                 {monthNames.map((monthName, monthIndex) => {
                     const monthDays = generateMonthDays(monthIndex, year)
@@ -203,31 +155,22 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                             <S.MonthTitle>
                                 {monthName} {year}
                             </S.MonthTitle>
-
                             <S.MonthDaysGrid>
                                 {monthDays.map((day, i) => {
+
+                                    // Пустые ячейки
                                     if (day.isEmpty) {
                                         return (
                                             <S.MonthDay
                                                 key={i}
                                                 className="empty"
-                                                style={{ cursor: 'default' }}
-                                            >
-                                                {day.number}
-                                            </S.MonthDay>
+                                            />
                                         )
                                     }
 
                                     const dayOfWeek = i % 7
                                     const isWeekend =
                                         dayOfWeek === 5 || dayOfWeek === 6
-
-                                    const currentDate = {
-                                        day: day.number,
-                                        month: monthIndex + 1,
-                                        year,
-                                    }
-
                                     const formattedDate = formatDate(
                                         day.number,
                                         monthIndex + 1,
@@ -236,53 +179,18 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                                     const isCurrent =
                                         formattedDate === todayString
 
-                                    // Подсвечиваем только если в currentPeriod
-                                    const isInSelectedPeriod = isDateSelected(
+                                    // Получаем классы через утилиту (KISS + DRY)
+                                    const classes = getDateClasses(
                                         day.number,
                                         monthIndex,
                                         year,
-                                        from,
-                                        to
-                                    )
-                                    const isSelectedStartFlag = isSelectedStart(
-                                        day.number,
-                                        monthIndex,
-                                        year,
-                                        from
-                                    )
-                                    const isSelectedEndFlag = isSelectedEnd(
-                                        day.number,
-                                        monthIndex,
-                                        year,
-                                        to
-                                    )
-
-                                    // Временный выбор (в процессе)
-                                    const isInTempPeriod =
-                                        tempStart &&
-                                        tempEnd &&
-                                        !isInSelectedPeriod &&
-                                        isDateInRange(
-                                            currentDate,
+                                        {
+                                            from,
+                                            to,
                                             tempStart,
-                                            tempEnd
-                                        )
-
-                                    const isTempStart =
-                                        tempStart &&
-                                        isSameDate(currentDate, tempStart) &&
-                                        !(
-                                            isSelectedStartFlag &&
-                                            isInSelectedPeriod
-                                        )
-
-                                    const isTempEnd =
-                                        tempEnd &&
-                                        isSameDate(currentDate, tempEnd) &&
-                                        !(
-                                            isSelectedEndFlag &&
-                                            isInSelectedPeriod
-                                        )
+                                            tempEnd,
+                                        }
+                                    )
 
                                     return (
                                         <S.MonthDay
@@ -290,12 +198,10 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                                             className={`
                                                 ${isWeekend ? 'weekend' : ''}
                                                 ${isCurrent ? 'current' : ''}
-                                                ${isInSelectedPeriod ? 'in-period' : ''}
-                                                ${isSelectedStartFlag ? 'period-boundary' : ''}
-                                                ${isSelectedEndFlag ? 'period-boundary' : ''}
-                                                ${isInTempPeriod ? 'in-temp-period' : ''}
-                                                ${isTempStart ? 'temp-boundary' : ''}
-                                                ${isTempEnd ? 'temp-boundary' : ''}
+                                                ${classes.isInSelectedPeriod ? 'in-period' : ''}
+                                                ${classes.isPeriodBoundary ? 'period-boundary' : ''}
+                                                ${classes.isInTempPeriod ? 'in-temp-period' : ''}
+                                                ${classes.isTempBoundary ? 'temp-boundary' : ''}
                                             `.trim()}
                                             onClick={() =>
                                                 handleDateClick(
@@ -314,6 +220,7 @@ const Calendar = ({ selectedPeriod, onPeriodSelect }) => {
                 })}
             </S.CalendarScrollable>
 
+            {/* Кнопка применения — только на мобильных */}
             <S.CalendarFooter>
                 <S.CalendarBtn
                     onClick={handleApplyPeriod}
