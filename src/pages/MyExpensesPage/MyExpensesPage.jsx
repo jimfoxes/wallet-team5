@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import * as S from './MyExpensesPage.styled'
 import ExpensesTable from '../../components/ExpensesTable/ExpensesTable'
 import MyExpenses from '../MyExpenses'
@@ -26,12 +27,16 @@ const formatDateFromISO = (isoString) => {
     return `${day}.${month}.${year}`
 }
 
-const MyExpensesPage = () => {
+const MyExpensesPage = ({ showForm }) => {
     const [expenses, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
 
     const token = localStorage.getItem('authToken')
+
+    const navigate = useNavigate()
+
+    const location = useLocation()
 
     useEffect(() => {
         if (!token) {
@@ -107,24 +112,49 @@ const MyExpensesPage = () => {
     return (
         <S.PageContainer>
             <S.ContentWrapper>
-                <S.PageTitle>Мои расходы</S.PageTitle>
+                {(location.pathname === '/expenses' || showForm) && (
+                    <S.PageTitle>Мои расходы</S.PageTitle>
+                )}
 
                 {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-                <S.TableWrapper>
-                    {loading ? (
-                        <S.LoadingText>Загрузка...</S.LoadingText>
-                    ) : (
-                        <ExpensesTable
-                            expenses={expenses}
-                            onDeleteExpense={handleDeleteExpense}
-                        />
-                    )}
-                </S.TableWrapper>
+                {/* Таблица */}
+                {showForm && (
+                    <S.TableWrapper>
+                        {loading ? (
+                            <S.LoadingText>Загрузка...</S.LoadingText>
+                        ) : (
+                            <ExpensesTable
+                                expenses={expenses}
+                                onDeleteExpense={handleDeleteExpense}
+                            />
+                        )}
+                    </S.TableWrapper>
+                )}
 
-                <S.FormWrapper>
-                    <MyExpenses onAddExpense={handleAddExpense} />
-                </S.FormWrapper>
+                {/* Форма */}
+                {showForm && (
+                    <S.DesktopOnly>
+                        <S.FormWrapper>
+                            <MyExpenses onAddExpense={handleAddExpense} />
+                        </S.FormWrapper>
+                    </S.DesktopOnly>
+                )}
+
+                {!showForm && (
+                    <S.MobileOnly>
+                        <S.MobileBackButton
+                            onClick={() => navigate('/expenses')}
+                        >
+                            <S.BackArrow />
+                            <S.BackText>Мои расходы</S.BackText>
+                        </S.MobileBackButton>
+
+                        <S.FormWrapper>
+                            <MyExpenses onAddExpense={handleAddExpense} />
+                        </S.FormWrapper>
+                    </S.MobileOnly>
+                )}
             </S.ContentWrapper>
         </S.PageContainer>
     )

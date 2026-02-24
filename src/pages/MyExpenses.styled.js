@@ -30,6 +30,11 @@ export const Label = styled.label`
     &:first-of-type {
         margin-top: 16px;
     }
+
+    @media (max-width: 768px) {
+        margin-top: 24px;
+        margin-bottom: 16px;
+    }
 `
 
 export const ErrorStar = styled.span`
@@ -138,5 +143,28 @@ export const SubmitButton = styled.button`
             $submitted && !$allValid
                 ? 'rgba(113, 113, 113, 1)'
                 : 'rgba(115, 52, 234, 1)'};
+    }
+
+    @media (max-width: 768px) {
+        margin-top: 0px;
+    }
+`
+export const MobileSubmitField = styled.div`
+    @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+
+        position: fixed;
+        left: 0;
+        bottom: 0;
+
+        width: 100%;
+        background: #ffffff;
+
+        padding: 24px 16px;
+        box-sizing: border-box;
+
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        z-index: 1000;
     }
 `
