@@ -13,7 +13,6 @@ export const ChartContainer = styled.div`
         padding: 0;
         max-width: none;
         box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0);
-        padding-top: 16px;
     }
 `
 export const TotalAmount = styled.p`
@@ -28,11 +27,7 @@ export const TotalAmount = styled.p`
     text-align: left;
 
     @media (max-width: 768px) {
-        width: 268px;
         height: 24px;
-        color: rgba(0, 0, 0, 1);
-        font-family: Montserrat;
-        font-style: Bold;
         font-size: 20px;
         font-weight: 700;
         line-height: 24px;
@@ -60,6 +55,7 @@ export const Chart = styled.div`
     @media (max-width: 768px) {
         gap: 6px;
         width: 342px;
+        padding-top: 12px;
     }
 `
 export const BarWrapper = styled.div`
@@ -92,6 +88,8 @@ export const Bar = styled.div`
     @media (max-width: 768px) {
         width: 52px;
         border-radius: 6px;
+        min-height: 3px;
+        max-height: 332px;
     }
 `
 export const BarLabel = styled.p`
@@ -150,14 +148,8 @@ export const BarValueAbove = styled.p`
     @media (max-width: 768px) {
         width: 52px;
         height: 12px;
-        color: rgba(0, 0, 0, 1);
-        font-family: Montserrat;
-        font-style: SemiBold;
         font-size: 10px;
-        font-weight: 600;
         line-height: 12px;
-        letter-spacing: 0px;
-        text-align: center;
     }
 `
 export const SelectedPeriodContainer = styled.div`
@@ -167,10 +159,6 @@ export const SelectedPeriodContainer = styled.div`
     align-items: center;
     gap: 4px;
     padding-top: 12px;
-
-    @media (max-width: 768px) {
-        justify-content: center;
-    }
 `
 export const PrefixText = styled.span`
     width: 70px;
@@ -183,27 +171,12 @@ export const PrefixText = styled.span`
     line-height: 15px;
     letter-spacing: 0px;
     text-align: center;
-
-    @media (max-width: 768px) {
-        width: 70px;
-        height: 15px;
-        color: rgba(153, 153, 153, 1);
-        font-family: Montserrat;
-        font-style: Regular;
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 15px;
-        letter-spacing: 0px;
-        text-align: center;
-    }
 `
 export const DateContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 4px;
-    @media (max-width: 768px) {
-    }
 `
 export const DateText = styled.span`
     height: 15px;
@@ -215,18 +188,6 @@ export const DateText = styled.span`
     line-height: 15px;
     letter-spacing: 0px;
     text-align: center;
-
-    @media (max-width: 768px) {
-        height: 15px;
-        color: rgba(153, 153, 153, 1);
-        font-family: Montserrat;
-        font-style: SemiBold;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 15px;
-        letter-spacing: 0px;
-        text-align: center;
-    }
 `
 export const SeparatorText = styled.span`
     height: 15px;
@@ -238,17 +199,6 @@ export const SeparatorText = styled.span`
     line-height: 15px;
     letter-spacing: 0px;
     text-align: center;
-
-    @media (max-width: 768px) {
-        color: rgba(153, 153, 153, 1);
-        font-family: Montserrat;
-        font-style: Regular;
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 15px;
-        letter-spacing: 0px;
-        text-align: center;
-    }
 `
 export const NoDataText = styled.span`
     height: 15px;
