@@ -22,6 +22,8 @@ export const PageContainer = styled.div`
 
     @media (max-width: 768px) {
         padding-bottom: 40px;
+        background: rgba(255, 255, 255, 1);
+        padding-left: 16px;
     }
 `
 
@@ -139,8 +141,9 @@ export const FormWrapper = styled.div`
         padding: 0;
 
         & > * {
-            padding: 24px !important;
-            border-radius: 20px !important;
+            padding: 0px !important;
+            border-radius: none;
+            box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 1) !important;
             min-height: auto;
         }
     }
@@ -167,4 +170,57 @@ export const LoadingText = styled.div`
     height: 100%;
     font-size: 16px;
     color: #666;
+`
+export const DesktopOnly = styled.div`
+    @media (max-width: 768px) {
+        display: none;
+    }
+`
+
+export const MobileOnly = styled.div`
+    display: none;
+
+    @media (max-width: 768px) {
+        display: block;
+    }
+`
+export const MobileBackButton = styled.button`
+    display: none;
+
+    @media (max-width: 768px) {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-top: 78px;
+        margin-bottom: 12px;
+
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+`
+export const BackArrow = styled.span`
+    width: 16px;
+    height: 16px;
+    background: rgba(153, 153, 153, 1);
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+
+    &::after {
+        content: '←';
+    }
+`
+export const BackText = styled.span`
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(153, 153, 153, 1);
 `

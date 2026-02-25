@@ -8,6 +8,7 @@ import {
     CategoryButton,
     SubmitButton,
     ErrorStar,
+    MobileSubmitField,
 } from './MyExpenses.styled'
 
 const categories = [
@@ -164,14 +165,16 @@ const MyExpenses = ({ onAddExpense }) => {
                 className={submitted ? (validAmount ? 'valid' : 'error') : ''}
             />
 
-            <SubmitButton
-                $allValid={allValid}
-                $submitted={submitted}
-                onClick={handleSubmit}
-                type="button"
-            >
-                Добавить новый расход
-            </SubmitButton>
+            <MobileSubmitField>
+                <SubmitButton
+                    $allValid={allValid}
+                    $submitted={submitted}
+                    onClick={handleSubmit}
+                    type="button"
+                >
+                    Добавить новый расход
+                </SubmitButton>
+            </MobileSubmitField>
         </FormWrapper>
     )
 }
