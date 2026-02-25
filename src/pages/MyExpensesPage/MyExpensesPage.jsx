@@ -1,4 +1,3 @@
-
 import { useNavigate, useLocation } from 'react-router-dom'
 import React, { useState, useEffect, useCallback } from 'react'
 import * as S from './MyExpensesPage.styled'
@@ -39,20 +38,7 @@ const MyExpensesPage = ({ showForm }) => {
 
     const location = useLocation()
 
-    useEffect(() => {
-        if (!token) {
-            setError(
-                'Токен авторизации отсутствует. Пожалуйста, войдите заново.'
-            )
-            setLoading(false)
-            return
-        }
-        loadTransactions()
-    }, [])
-
-    const loadTransactions = async () => {
     const loadTransactions = useCallback(async () => {
-
         try {
             setLoading(true)
             setError('')
