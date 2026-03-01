@@ -23,13 +23,18 @@ export const TableContainer = styled.div`
     }
 `
 
+export const TableHeaderBorderContainer = styled.div`
+    border-bottom: 0.5px solid rgba(153, 153, 153, 1);
+    margin-bottom: 12px;
+`
+
 export const TableTitle = styled.h2`
     font-family: Montserrat;
     font-weight: 700;
     font-size: 24px;
     line-height: 29px;
     color: rgba(0, 0, 0, 1);
-    margin: 32px 0 16px 32px;
+    margin: 32px 0 32px 32px;
     padding: 0;
     text-align: left;
 
@@ -42,7 +47,6 @@ export const TableTitle = styled.h2`
 
 export const TableHeader = styled.div`
     padding: 0 32px;
-    margin-bottom: 12px;
 
     @media (max-width: 768px) {
         padding: 0 20px;
@@ -51,12 +55,13 @@ export const TableHeader = styled.div`
 
 export const HeaderRow = styled.div`
     display: grid;
-    grid-template-columns: 1.8fr 1fr 0.9fr 0.9fr 0.7fr;
-    border-bottom: 0.5px solid rgba(153, 153, 153, 1);
-    padding-bottom: 8px;
+    grid-template-columns: 141fr 141fr 142fr 158fr 12fr;
+    gap: 32px;
+    padding-bottom: 6px;
 
     @media (max-width: 768px) {
-        grid-template-columns: 1.6fr 1fr 0.9fr 0.9fr 0.6fr;
+        grid-template-columns: 74fr 74fr 73fr 74fr;
+        gap: 16px;
     }
 `
 
@@ -68,14 +73,14 @@ export const HeaderCell = styled.div`
     color: rgba(153, 153, 153, 1);
     text-align: left;
 
-    &:nth-child(4) {
-        text-align: right;
-        padding-right: 24px;
-    }
+    @media (max-width: 768px) {
+        &:nth-child(3) {
+            text-align: right;
+        }
 
-    &:last-child {
-        text-align: right;
-        padding-right: 8px;
+        &:nth-child(4) {
+            text-align: right;
+        }
     }
 `
 
@@ -109,13 +114,14 @@ export const TableBody = styled.div`
 
 export const Row = styled.div`
     display: grid;
-    grid-template-columns: 1.8fr 1fr 0.9fr 0.9fr 0.7fr;
-    padding: 12px 0;
+    grid-template-columns: 141fr 141fr 142fr 158fr 12fr;
+    gap: 32px;
     align-items: center;
+    margin-bottom: 14px;
 
     @media (max-width: 768px) {
-        grid-template-columns: 1.6fr 1fr 0.9fr 0.9fr 0.6fr;
-        padding: 8px 0;
+        grid-template-columns: 74fr 74fr 73fr 74fr;
+        gap: 16px;
     }
 `
 
@@ -129,32 +135,17 @@ export const Cell = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding-right: 16px;
-
-    &:nth-child(4) {
-        text-align: right;
-        font-weight: 400;
-        padding-right: 24px;
-    }
-
-    &:last-child {
-        text-align: right;
-        padding-right: 8px;
-        padding-left: 0;
-    }
 
     @media (max-width: 768px) {
         font-size: 10px;
         line-height: 15px;
-        padding-right: 12px;
 
-        &:nth-child(4) {
-            padding-right: 16px;
+        &:nth-child(3) {
+            text-align: right;
         }
 
-        &:last-child {
-            padding-right: 4px;
-            padding-left: 0;
+        &:nth-child(4) {
+            text-align: right;
         }
     }
 `
@@ -163,7 +154,6 @@ export const DeleteButton = styled.button`
     background: none;
     border: none;
     cursor: pointer;
-    padding: 6px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -172,8 +162,8 @@ export const DeleteButton = styled.button`
     margin-left: auto;
 
     svg {
-        width: 18px;
-        height: 18px;
+        width: 12px;
+        height: 12px;
         color: #999;
         transition: color 0.2s;
     }

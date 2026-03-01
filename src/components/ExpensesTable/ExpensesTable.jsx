@@ -33,17 +33,19 @@ const ExpensesTable = ({ expenses, onDeleteExpense }) => {
 
     return (
         <S.TableContainer>
-            <S.TableTitle>Таблица расходов</S.TableTitle>
+            <S.TableHeaderBorderContainer>
+                <S.TableTitle>Таблица расходов</S.TableTitle>
 
-            <S.TableHeader>
-                <S.HeaderRow>
-                    <S.HeaderCell>Описание</S.HeaderCell>
-                    <S.HeaderCell>Категория</S.HeaderCell>
-                    <S.HeaderCell>Дата</S.HeaderCell>
-                    <S.HeaderCell>Сумма</S.HeaderCell>
-                    <S.HeaderCell></S.HeaderCell>
-                </S.HeaderRow>
-            </S.TableHeader>
+                <S.TableHeader>
+                    <S.HeaderRow>
+                        <S.HeaderCell>Описание</S.HeaderCell>
+                        <S.HeaderCell>Категория</S.HeaderCell>
+                        <S.HeaderCell>Дата</S.HeaderCell>
+                        <S.HeaderCell>Сумма</S.HeaderCell>
+                        <S.HeaderCell></S.HeaderCell>
+                    </S.HeaderRow>
+                </S.TableHeader>
+            </S.TableHeaderBorderContainer>
 
             <S.TableBody>
                 {expenses.length === 0 ? (
