@@ -29,6 +29,11 @@ export const AnalyticsContainer = styled.div`
                     return '100px'
             }
         }};
+        padding-bottom: 0px;
+        height: 700px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: rgba(255, 255, 255, 1);
     }
 
     @media (max-width: 430px) {
@@ -42,6 +47,11 @@ export const AnalyticsContainer = styled.div`
                     return '100px'
             }
         }};
+        padding-bottom: 0px;
+        height: 700px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: rgba(255, 255, 255, 1);
     }
 `
 

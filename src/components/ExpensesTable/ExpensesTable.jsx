@@ -68,6 +68,9 @@ const ExpensesTable = ({ expenses, onDeleteExpense }) => {
                     ))
                 )}
             </S.TableBody>
+            <S.DelMobButtonContainer>
+                <S.DelMobButton>Удалить расход</S.DelMobButton>
+            </S.DelMobButtonContainer>
         </S.TableContainer>
     )
 }
