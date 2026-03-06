@@ -1,91 +1,121 @@
 import styled from 'styled-components'
 
-export const PageContainer = styled.div`
-    background: rgba(244, 245, 246, 1);
-    position: relative;
+const COLORS = {
+    bgGray: 'rgba(244, 245, 246, 1)',
+    white: 'rgba(255, 255, 255, 1)',
+    black: 'rgba(0, 0, 0, 1)',
+    primary: 'rgba(115, 52, 234, 1)',
+    primaryDark: 'rgb(81, 0, 231)',
+}
+
+export const ContentWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding-right: calc(50% - 600px);
+    padding-left: calc(50% - 600px);
+    width: 100%;
+    padding-top: 32px;
+    padding-bottom: 80px;
+    background-color: ${COLORS.bgGray};
     box-sizing: border-box;
 
-    @media (max-width: 1366px) {
-        padding-left: 60px;
-        padding-right: 60px;
-    }
-
-    @media (max-width: 1200px) {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-left: 20px;
-        padding-right: 20px;
+    @media (max-width: 1160px) {
+        padding-right: calc(50% - 394px);
+        padding-left: calc(50% - 395px);
     }
 
     @media (max-width: 768px) {
-        padding-bottom: 40px;
-        background: rgba(255, 255, 255, 1);
+        padding-top: ${(props) => {
+            switch (props.$isCalendarView) {
+                case 'calendar':
+                    return '24px'
+                case 'chart':
+                    return '24px'
+                default:
+                    return '100px'
+            }
+        }};
+        padding-bottom: 0px;
+        height: 700px;
         padding-left: 16px;
+        padding-right: 16px;
+        background-color: rgba(255, 255, 255, 1);
+        max-width: 100%;
+        margin: 0;
     }
-`
 
-export const ContentWrapper = styled.div`
-    position: relative;
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
+    @media (max-width: 430px) {
+        padding-top: ${(props) => {
+            switch (props.$isCalendarView) {
+                case 'calendar':
+                    return '24px'
+                case 'chart':
+                    return '24px'
+                default:
+                    return '100px'
+            }
+        }};
+        padding-bottom: 0px;
+        height: 700px;
+        padding-left: 16px;
+        padding-right: 16px;
+        background-color: rgba(255, 255, 255, 1);
+    }
 `
 
 export const PageTitle = styled.h1`
-    position: absolute;
-    top: 100px;
-    left: 120px;
-    width: 233px;
-    height: 48px;
     font-family: Montserrat;
     font-weight: 700;
+    font-style: Bold;
     font-size: 32px;
+    color: ${COLORS.black};
     line-height: 150%;
-    color: rgba(0, 0, 0, 1);
-    margin: 0;
-    z-index: 2;
+    letter-spacing: 0px;
+    text-align: left;
+    margin-left: 0;
+    width: 100%;
 
-    @media (max-width: 1366px) {
-        left: 60px;
-    }
-
-    @media (max-width: 1200px) {
-        position: static;
-        width: auto;
-        height: auto;
-        text-align: center;
-        padding-top: 100px;
-        margin-bottom: 32px;
-    }
-
-    @media (max-width: 768px) {
-        padding-top: 64px;
+    @media (max-width: 430px) {
         font-size: 24px;
-        line-height: 29px;
+        line-height: 100%;
+        letter-spacing: 0px;
+    }
+`
+export const ColumnsLayout = styled.div`
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+    width: 100%;
+
+    @media (max-width: 1160px) {
+        flex-direction: column;
+        align-items: stretch;
+        & > * {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+    @media (max-width: 430px) {
+        margin-top: ${(props) => (props.$isCalendarView ? '0px' : '24px')};
+
+        /* На очень маленьких экранах убираем центрирование */
+        & > * {
+            margin-left: 0;
+            margin-right: 0;
+        }
     }
 `
 
 export const TableWrapper = styled.div`
-    position: absolute;
-    top: 180px;
-    left: 118px;
     width: 789px;
     height: 618px;
-    z-index: 1;
+    flex-shrink: 0;
 
-    @media (max-width: 1366px) {
-        left: 60px;
-        width: 689px;
-    }
-
-    @media (max-width: 1200px) {
-        position: static;
+    @media (max-width: 1160px) {
         width: 100%;
         max-width: 789px;
-        height: auto;
         min-height: 618px;
-        margin: 0 auto 40px auto;
     }
 
     @media (max-width: 768px) {
@@ -96,40 +126,27 @@ export const TableWrapper = styled.div`
 `
 
 export const FormWrapper = styled.div`
-    position: absolute;
-    top: 180px;
-    left: 941px;
     width: 379px;
     height: 618px;
-    z-index: 1;
     text-align: left;
+    flex-shrink: 0;
 
     & > * {
-        width: 100% !important;
-        height: 100% !important;
-        margin: 0 !important;
-        padding: 32px !important;
-        box-sizing: border-box !important;
-        border-radius: 30px !important;
-        box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13) !important;
-        background: #fff !important;
-        display: flex !important;
-        flex-direction: column !important;
+        width: 100%;
+        height: 100%;
+        padding: 32px;
+        box-sizing: border-box;
+        border-radius: 30px;
+        box-shadow: 0px 20px 67px -12px rgba(0, 0, 0, 0.13);
+        background: #fff;
     }
 
-    @media (max-width: 1366px) {
-        left: 789px;
-    }
-
-    @media (max-width: 1200px) {
-        position: static;
+    @media (max-width: 1160px) {
         width: 100%;
         max-width: 379px;
-        height: auto;
-        margin: 0 auto;
 
         & > * {
-            height: auto !important;
+            height: auto;
             min-height: 618px;
         }
     }
@@ -139,9 +156,9 @@ export const FormWrapper = styled.div`
         padding: 0;
 
         & > * {
-            padding: 0px !important;
+            padding: 0px;
             border-radius: none;
-            box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 1) !important;
+            box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 1);
             min-height: auto;
         }
     }

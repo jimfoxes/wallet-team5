@@ -110,14 +110,14 @@ const MyExpenses = ({ showForm }) => {
     }
 
     return (
-        <S.PageContainer>
-            <S.ContentWrapper>
-                {(location.pathname === '/expenses' || showForm) && (
-                    <S.PageTitle>Мои расходы</S.PageTitle>
-                )}
+        <S.ContentWrapper>
+            {(location.pathname === '/expenses' || showForm) && (
+                <S.PageTitle>Мои расходы</S.PageTitle>
+            )}
 
-                {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+            {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
+            <S.ColumnsLayout>
                 {/* Таблица */}
                 {showForm && (
                     <S.TableWrapper>
@@ -155,8 +155,8 @@ const MyExpenses = ({ showForm }) => {
                         </S.FormWrapper>
                     </S.MobileOnly>
                 )}
-            </S.ContentWrapper>
-        </S.PageContainer>
+            </S.ColumnsLayout>
+        </S.ContentWrapper>
     )
 }
 
