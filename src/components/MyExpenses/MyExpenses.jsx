@@ -115,7 +115,9 @@ const MyExpenses = ({ showForm }) => {
                 <S.PageTitleWrapper>
                     <S.PageTitle>Мои расходы</S.PageTitle>
 
-                    <S.MobileToExpensesFormButton>
+                    <S.MobileToExpensesFormButton
+                        onClick={() => navigate('/new-expense')}
+                    >
                         <svg
                             viewBox="0 0 11.6667 11.6666"
                             xmlns="http://www.w3.org/2000/svg"

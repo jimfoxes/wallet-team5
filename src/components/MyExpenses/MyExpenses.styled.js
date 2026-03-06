@@ -38,7 +38,7 @@ export const PageTitleWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     @media (max-width: 768px) {
-        padding: 0 16px;
+        padding: 0 16px 24px;
     }
 `
 
@@ -98,7 +98,7 @@ export const ColumnsLayout = styled.div`
     }
 
     @media (max-width: 768px) {
-        margin-top: 24px;
+        margin-top: 0;
 
         & > * {
             margin-left: 0;
@@ -145,7 +145,7 @@ export const FormWrapper = styled.div`
 
     @media (max-width: 768px) {
         max-width: 100%;
-        padding: 0;
+        padding: 0 16px;
 
         & > * {
             padding: 0px;
@@ -198,13 +198,10 @@ export const MobileBackButton = styled.button`
         display: flex;
         align-items: center;
         gap: 8px;
-
-        margin-top: 78px;
+        padding-left: 16px;
         margin-bottom: 12px;
-
         background: none;
         border: none;
-        padding: 0;
         cursor: pointer;
     }
 `

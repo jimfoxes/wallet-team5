@@ -35,24 +35,6 @@ export const AnalyticsContainer = styled.div`
         padding-right: 16px;
         background-color: rgba(255, 255, 255, 1);
     }
-
-    @media (max-width: 430px) {
-        padding-top: ${(props) => {
-            switch (props.$isCalendarView) {
-                case 'calendar':
-                    return '24px'
-                case 'chart':
-                    return '24px'
-                default:
-                    return '100px'
-            }
-        }};
-        padding-bottom: 0px;
-        height: 700px;
-        padding-left: 16px;
-        padding-right: 16px;
-        background-color: rgba(255, 255, 255, 1);
-    }
 `
 
 export const AnalyticsTitle = styled.h1`
@@ -65,7 +47,7 @@ export const AnalyticsTitle = styled.h1`
     letter-spacing: 0px;
     text-align: left;
 
-    @media (max-width: 430px) {
+    @media (max-width: 768px) {
         font-size: 24px;
         line-height: 100%;
         letter-spacing: 0px;
@@ -82,7 +64,7 @@ export const ColumnsLayout = styled.div`
         align-items: stretch;
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 768px) {
         margin-top: ${(props) => (props.$isCalendarView ? '0px' : '24px')};
     }
 `
