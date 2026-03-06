@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import React, { useState, useEffect, useCallback } from 'react'
-import * as S from './MyExpensesPage.styled'
-import ExpensesTable from '../../components/ExpensesTable/ExpensesTable'
-import ExpensesForm from '../../components/ExpensesForm/ExpensesForm'
+import * as S from './MyExpenses.styled'
+import ExpensesTable from '../ExpensesTable/ExpensesTable'
+import ExpensesForm from '../ExpensesForm/ExpensesForm'
 import {
     fetchTransactions,
     addTransaction,
@@ -27,7 +27,7 @@ const formatDateFromISO = (isoString) => {
     return `${day}.${month}.${year}`
 }
 
-const MyExpensesPage = ({ showForm }) => {
+const MyExpenses = ({ showForm }) => {
     const [expenses, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
@@ -160,4 +160,4 @@ const MyExpensesPage = ({ showForm }) => {
     )
 }
 
-export default MyExpensesPage
+export default MyExpenses
