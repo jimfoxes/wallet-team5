@@ -26,7 +26,7 @@ export const TableContainer = styled.div`
 
 export const TableHeaderBorderContainer = styled.div`
     border-bottom: 0.5px solid rgba(153, 153, 153, 1);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 `
 
 export const TableTitle = styled.h2`
@@ -48,7 +48,7 @@ export const TableHeader = styled.div`
     padding: 0 32px;
 
     @media (max-width: 768px) {
-        padding: 0 20px;
+        padding: 0 16px;
     }
 `
 
@@ -113,7 +113,7 @@ export const TableBody = styled.div`
     }
 
     @media (max-width: 768px) {
-        padding: 0 20px 24px 20px;
+        padding: 0;
     }
 `
 
@@ -123,10 +123,15 @@ export const Row = styled.div`
     gap: 32px;
     align-items: center;
     margin-bottom: 14px;
+    background-color: ${(props) =>
+        props.$isSelected ? 'rgba(241, 235, 253, 1)' : 'transparent'};
 
     @media (max-width: 768px) {
+        margin-bottom: 0px;
+        height: 24px;
         grid-template-columns: 74fr 74fr 73fr 74fr;
         gap: 16px;
+        padding: 0 16px;
     }
 `
 
@@ -135,7 +140,8 @@ export const Cell = styled.div`
     font-weight: 400;
     font-size: 12px;
     line-height: 15px;
-    color: rgba(0, 0, 0, 1);
+    color: ${(props) =>
+        props.$isSelected ? 'rgba(115, 52, 234, 1)' : 'rgba(0, 0, 0, 1)'};
     text-align: left;
     white-space: nowrap;
     overflow: hidden;
@@ -224,6 +230,7 @@ export const DelMobButton = styled.button`
         line-height: 15px;
         letter-spacing: 0px;
         text-align: center;
+        border: none;
 
         &:active {
             background: ${COLORS.primaryDark};

@@ -180,6 +180,7 @@ export const Button = styled.button`
     letter-spacing: 0px;
     text-align: center;
     cursor: pointer;
+    border: none;
 
     &:hover {
         background: rgb(96, 26, 228);

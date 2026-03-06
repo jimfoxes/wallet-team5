@@ -9,6 +9,7 @@ export default function AppRoutes() {
     const [isAuthenticated, setIsAuthenticated] = useState(
         !!localStorage.getItem('authToken')
     )
+
     const navigate = useNavigate()
 
     useEffect(() => {

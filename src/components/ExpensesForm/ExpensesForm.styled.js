@@ -34,6 +34,9 @@ export const Label = styled.label`
     @media (max-width: 768px) {
         margin-top: 24px;
         margin-bottom: 16px;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
     }
 `
 

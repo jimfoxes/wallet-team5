@@ -141,6 +141,7 @@ export const CalendarButton = styled.button`
         line-height: 15px;
         letter-spacing: 0px;
         text-align: center;
+        border: none;
 
         &:active {
             background: ${COLORS.primaryDark};

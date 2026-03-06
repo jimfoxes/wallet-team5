@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as S from './ExpensesTable.styled'
 
 const formatAmount = (amount) => {
@@ -25,6 +25,16 @@ const TrashIcon = () => (
 )
 
 const ExpensesTable = ({ expenses, onDeleteExpense }) => {
+    const [selectedTransaction, setSelectedTransaction] = useState(null)
+
+    const handleRowClick = (expense) => {
+        if (window.innerWidth <= 768) {
+            setSelectedTransaction(
+                expense.id === selectedTransaction ? null : expense.id
+            )
+        }
+    }
+
     const handleDelete = (id) => {
         if (onDeleteExpense) {
             onDeleteExpense(id)
@@ -54,11 +64,31 @@ const ExpensesTable = ({ expenses, onDeleteExpense }) => {
                     </S.EmptyMessage>
                 ) : (
                     expenses.map((expense) => (
-                        <S.Row key={expense.id}>
-                            <S.Cell>{expense.description}</S.Cell>
-                            <S.Cell>{expense.category}</S.Cell>
-                            <S.Cell>{expense.date}</S.Cell>
-                            <S.Cell>{formatAmount(expense.sum)}</S.Cell>
+                        <S.Row
+                            key={expense.id}
+                            $isSelected={expense.id === selectedTransaction}
+                            onClick={() => handleRowClick(expense)}
+                        >
+                            <S.Cell
+                                $isSelected={expense.id === selectedTransaction}
+                            >
+                                {expense.description}
+                            </S.Cell>
+                            <S.Cell
+                                $isSelected={expense.id === selectedTransaction}
+                            >
+                                {expense.category}
+                            </S.Cell>
+                            <S.Cell
+                                $isSelected={expense.id === selectedTransaction}
+                            >
+                                {expense.date}
+                            </S.Cell>
+                            <S.Cell
+                                $isSelected={expense.id === selectedTransaction}
+                            >
+                                {formatAmount(expense.sum)}
+                            </S.Cell>
                             <S.Cell>
                                 <S.DeleteButton
                                     onClick={() => handleDelete(expense.id)}
@@ -69,10 +99,22 @@ const ExpensesTable = ({ expenses, onDeleteExpense }) => {
                         </S.Row>
                     ))
                 )}
+
+                {selectedTransaction && window.innerWidth <= 768 && (
+                    <S.DelMobButtonContainer>
+                        <S.DelMobButton
+                            onClick={() => {
+                                if (selectedTransaction) {
+                                    handleDelete(selectedTransaction)
+                                    setSelectedTransaction(null)
+                                }
+                            }}
+                        >
+                            Удалить расход
+                        </S.DelMobButton>
+                    </S.DelMobButtonContainer>
+                )}
             </S.TableBody>
-            <S.DelMobButtonContainer>
-                <S.DelMobButton>Удалить расход</S.DelMobButton>
-            </S.DelMobButtonContainer>
         </S.TableContainer>
     )
 }
